@@ -1,0 +1,311 @@
+/**
+ * EFACTICOM — Acerca: hoja 1 (texto + figura sintetizada), hoja 2 (tabla ancha + conglomerado).
+ */
+
+.doc-page--about-sheet {
+  min-height: var(--page-a4-h);
+}
+
+.doc-page__inner--about-narrative,
+.doc-page__inner--about-conglomerado {
+  padding-top: 10mm;
+}
+
+/* Línea editorial opcional (la numeración de hoja es global en .doc-page::before) */
+.about-eyebrow {
+  margin: 0 0 0.35rem;
+  padding-right: 2.5rem;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--blue-600);
+}
+
+.about-chapter-title {
+  margin: 0 0 1.1rem;
+  padding-bottom: 0.5rem;
+  padding-right: 2.25rem;
+  border-bottom: 2px solid rgba(37, 99, 171, 0.2);
+  font-family: var(--font-sans);
+  font-size: clamp(1.35rem, 3.5vw, 1.75rem);
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  line-height: 1.2;
+  text-transform: none;
+  color: var(--blue-900);
+}
+
+.about-narrative--justify p {
+  margin: 0 0 0.9rem;
+  font-size: 0.9rem;
+  line-height: 1.68;
+  color: var(--blue-900);
+  text-align: justify;
+  text-wrap: pretty;
+  hyphens: auto;
+  -webkit-hyphens: auto;
+}
+
+.about-narrative--justify p em {
+  font-style: italic;
+  font-weight: 800;
+  font-size: 1.12em;
+}
+
+.about-narrative--justify p:last-child {
+  margin-bottom: 0;
+}
+
+.about-narrative--functions {
+  margin-top: 0.25rem;
+}
+
+/* ——— Figura sintetizada (hoja 1, bajo los párrafos) ——— */
+.about-synth-figure {
+  margin: 1.15rem 0 0;
+  padding: 0;
+  border: 1px solid rgba(148, 163, 184, 0.45);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  background: var(--white);
+}
+
+.about-synth-figure__lead {
+  margin: 0;
+  padding: 0.5rem 0.75rem;
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--blue-800);
+  background: rgba(232, 240, 251, 0.92);
+  border-bottom: 1px solid rgba(226, 232, 240, 0.95);
+}
+
+.about-synth-figure__frame {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 8rem;
+  max-height: 125mm;
+  padding: 0.55rem 0.65rem;
+  background: #fff;
+  line-height: 0;
+}
+
+.about-synth-diagram__img {
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+  max-height: 120mm;
+  object-fit: contain;
+  display: block;
+}
+
+/* Variante compacta: diagrama en hoja 2 junto a la tabla de clústeres */
+.doc-page--about-conglomerado .about-synth-figure__frame {
+  max-height: 72mm;
+}
+
+.doc-page--about-conglomerado .about-synth-diagram__img {
+  max-height: 68mm;
+}
+
+
+.about-synth-figure__cap {
+  margin: 0;
+  padding: 0.45rem 0.6rem;
+  font-size: 0.64rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  line-height: 1.35;
+  text-transform: uppercase;
+  text-align: center;
+  color: var(--slate-500);
+  background: rgba(248, 250, 252, 0.98);
+  border-top: 1px solid rgba(226, 232, 240, 0.95);
+}
+
+/* ——— Hoja 2 ——— */
+.about-cong-continued {
+  margin: 0 0 0.35rem;
+  padding-right: 2.25rem;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--blue-600);
+}
+
+.about-cong-title {
+  margin: 0.15rem 0 0.65rem;
+  font-size: clamp(1.35rem, 3.5vw, 1.75rem);
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  line-height: 1.2;
+  text-transform: none;
+  color: var(--blue-800);
+}
+
+/* Tabla captura a ancho completo y más alta */
+.about-cong-table-wide {
+  margin: 0 0 0.85rem;
+  padding: 0;
+  border: 1px solid rgba(148, 163, 184, 0.45);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  background: var(--white);
+}
+
+.about-cong-table-wide__frame {
+  display: flex;
+  align-items: stretch;
+  justify-content: center;
+  min-height: 10rem;
+  max-height: none;
+  padding: 0.5rem 0.65rem;
+  background: #fff;
+  line-height: normal;
+}
+
+.about-cong-table-wide__img {
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+  max-height: 150mm;
+  object-fit: contain;
+  display: block;
+}
+
+/* Variante compacta cuando la imagen aparece en la hoja 1 (junto al texto de introducción) */
+.doc-page--about-narrative .about-cong-table-wide__frame {
+  max-height: none;
+}
+
+.doc-page--about-narrative .about-cong-table-wide__img {
+  max-height: 90mm;
+}
+
+.doc-page--about-narrative .about-cong-title {
+  margin-top: 1rem;
+}
+
+
+.about-cong-metrics {
+  margin: 0 0 0.85rem;
+  font-size: 0.82rem;
+  line-height: 1.58;
+  color: var(--slate-600);
+  text-align: justify;
+  text-wrap: pretty;
+  hyphens: auto;
+  -webkit-hyphens: auto;
+}
+
+.about-editorial-note {
+  margin: 0.65rem 0 0.95rem;
+  padding: 0.6rem 0.75rem 0.6rem 0.9rem;
+  font-size: 0.78rem;
+  line-height: 1.55;
+  font-style: italic;
+  color: var(--slate-600);
+  background: rgba(248, 250, 252, 0.65);
+  border-left: 3px solid var(--blue-400);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+}
+
+.about-vars-table-title {
+  margin: 0.85rem 0 0.45rem;
+  font-family: var(--font-sans);
+  font-size: clamp(1.35rem, 3.5vw, 1.75rem);
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  line-height: 1.2;
+  color: var(--blue-900);
+}
+
+.vars-table-scroll {
+  overflow-x: auto;
+  margin-top: 0.2rem;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Reutilizado en la franja superior de la tabla ancha */
+.about-cong-fig__lead {
+  margin: 0;
+  padding: 0.5rem 0.7rem;
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--blue-800);
+  background: rgba(232, 240, 251, 0.92);
+  border-bottom: 1px solid rgba(226, 232, 240, 0.95);
+}
+
+.about-cong-fig__cap {
+  margin: 0;
+  padding: 0.45rem 0.55rem;
+  font-size: 0.64rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  line-height: 1.35;
+  text-transform: uppercase;
+  text-align: center;
+  color: var(--slate-500);
+  background: rgba(248, 250, 252, 0.98);
+  border-top: 1px solid rgba(226, 232, 240, 0.95);
+}
+
+.vars-cluster-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.82rem;
+  line-height: 1.5;
+  border: 1px solid rgba(148, 163, 184, 0.45);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+}
+
+.vars-cluster-table thead th {
+  text-align: left;
+  font-weight: 800;
+  font-size: 0.7rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--blue-900);
+  background: rgba(232, 240, 251, 0.9);
+  border-bottom: 1px solid rgba(148, 163, 184, 0.45);
+  padding: 0.62rem 0.72rem;
+}
+
+.vars-cluster-table tbody th,
+.vars-cluster-table tbody td {
+  padding: 0.64rem 0.72rem;
+  vertical-align: top;
+  border-bottom: 1px solid rgba(226, 232, 240, 0.95);
+}
+
+.vars-cluster-table tbody tr:last-child th,
+.vars-cluster-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.vars-table__cluster {
+  width: 20%;
+  font-weight: 800;
+  color: var(--blue-800);
+  background: rgba(248, 250, 252, 0.6);
+}
+
+.vars-table__desc {
+  width: 38%;
+  color: var(--slate-600);
+}
+
+.vars-table__vars {
+  width: 42%;
+  color: var(--blue-800);
+  font-weight: 600;
+}

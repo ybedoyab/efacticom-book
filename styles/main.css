@@ -1,0 +1,1012 @@
+/**
+ * EFACTICOM — Modo documento (aspecto PDF / lector de páginas).
+ */
+:root {
+  --blue-950: #0a1628;
+  --blue-900: #0f2744;
+  --blue-800: #153a5c;
+  --blue-700: #1e4976;
+  --blue-600: #2563ab;
+  --blue-500: #3b82c4;
+  --blue-400: #60a5d8;
+  --blue-200: #bfdbfe;
+  --blue-100: #e8f0fb;
+  --slate-500: #64748b;
+  --slate-200: #e2e8f0;
+  --white: #ffffff;
+
+  --font-sans: "DM Sans", system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+  --font-serif: "Instrument Serif", Georgia, "Times New Roman", serif;
+
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  --shadow-page: 0 1px 3px rgba(0, 0, 0, 0.08), 0 4px 12px rgba(0, 0, 0, 0.06);
+  --shadow-soft: 0 18px 50px rgba(15, 39, 68, 0.1);
+  --shadow-card: 0 4px 16px rgba(15, 39, 68, 0.06);
+
+  /* A4 ISO 216 — tamaño físico en pantalla e impresión */
+  --page-width: 210mm;
+  --page-max-w: 210mm;
+  --page-a4-h: 297mm;
+  --page-h-px: 1123px;
+  --viewer-bg: #8e8e8e;
+  --toolbar-bg: #ececec;
+  --toolbar-border: #c4c4c4;
+
+  /* Barra de tema dentro de cada hoja (no verde lima; acento azul documento) */
+  --sheet-nav-bg-top: #1a4f7a;
+  --sheet-nav-bg-mid: #153a5c;
+  --sheet-nav-bg-bottom: #0f2744;
+  --sheet-nav-text: #f0f6fc;
+  --sheet-nav-text-muted: rgba(240, 246, 252, 0.55);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 5rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+body.doc-mode {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: 15px;
+  line-height: 1.65;
+  color: var(--blue-900);
+  background: var(--viewer-bg);
+  overflow-x: auto;
+  min-width: var(--page-max-w);
+}
+
+.efacticom {
+  min-height: 100vh;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+a {
+  color: var(--blue-700);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+}
+
+a:hover {
+  color: var(--blue-600);
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  border: 0;
+}
+
+.skip-link {
+  position: absolute;
+  left: -9999px;
+  top: 0;
+  z-index: 1000;
+  padding: 0.75rem 1rem;
+  background: var(--blue-900);
+  color: var(--white);
+}
+
+.skip-link:focus {
+  left: 1rem;
+}
+
+/* ——— Barra superior tipo visor PDF ——— */
+.doc-toolbar {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: var(--toolbar-bg);
+  border-bottom: 1px solid var(--toolbar-border);
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.6) inset;
+}
+
+.doc-toolbar__inner {
+  width: var(--page-max-w);
+  min-width: var(--page-max-w);
+  max-width: none;
+  margin: 0 auto;
+  padding: 0.4rem 0.6rem;
+  display: flex;
+  align-items: center;
+  gap: 0.35rem 0.65rem;
+  flex-wrap: nowrap;
+  justify-content: space-between;
+}
+
+.doc-toolbar__left {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  flex: 0 1 auto;
+  min-width: 0;
+}
+
+.doc-toolbar__title {
+  font-weight: 800;
+  font-size: 1rem;
+  letter-spacing: 0.1em;
+  color: var(--blue-950);
+  white-space: nowrap;
+}
+
+.doc-toolbar__sep {
+  color: var(--slate-500);
+  font-weight: 300;
+}
+
+.doc-toolbar__subtitle {
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: var(--blue-800);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  white-space: nowrap;
+}
+
+.doc-toolbar__cluster {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.35rem 0.55rem;
+}
+
+.doc-toolbar__nav {
+  flex: 1 1 auto;
+  display: flex;
+  justify-content: center;
+}
+
+.doc-toolbar__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.15rem 0.35rem;
+  justify-content: center;
+  align-items: center;
+}
+
+.doc-toolbar__list > li {
+  flex-shrink: 0;
+}
+
+.doc-toolbar__link {
+  font-size: 0.65rem;
+  font-weight: 500;
+  color: var(--blue-800);
+  text-decoration: none;
+  padding: 0.15rem 0.28rem;
+  border-radius: 4px;
+  white-space: nowrap;
+}
+
+.doc-toolbar__link:hover {
+  background: rgba(37, 99, 171, 0.1);
+  text-decoration: none;
+}
+
+.doc-toolbar__link--current {
+  font-weight: 700;
+  color: var(--blue-900);
+  background: rgba(37, 99, 171, 0.12);
+}
+
+.doc-toolbar__actions {
+  flex-shrink: 0;
+}
+
+/* Botón «Guardar PDF» — mismo estilo pill que .btn--primary en la landing */
+.doc-toolbar__pdf {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  padding: 0.42rem 0.95rem;
+  font-family: inherit;
+  font-size: 0.76rem;
+  font-weight: 600;
+  line-height: 1.2;
+  color: var(--white);
+  background: linear-gradient(135deg, var(--blue-600), var(--blue-700));
+  border: none;
+  border-radius: 999px;
+  box-shadow: 0 4px 14px rgba(37, 99, 171, 0.35);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+}
+
+.doc-toolbar__pdf:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(37, 99, 171, 0.45);
+  background: linear-gradient(135deg, var(--blue-500), var(--blue-600));
+}
+
+.doc-toolbar__pdf:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 8px rgba(37, 99, 171, 0.3);
+}
+
+.doc-toolbar__pdf:focus-visible {
+  outline: 2px solid var(--blue-400);
+  outline-offset: 3px;
+}
+
+.doc-toolbar__pdf-icon {
+  flex-shrink: 0;
+  opacity: 0.95;
+}
+
+.doc-toolbar__page-num {
+  flex-shrink: 0;
+  font-family: var(--font-sans);
+  font-size: 0.82rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  line-height: 1;
+  color: var(--blue-900);
+  font-variant-numeric: tabular-nums;
+  text-shadow:
+    0.5px 0.5px 0 rgba(194, 65, 12, 0.28),
+    -0.5px -0.5px 0 rgba(255, 255, 255, 0.4);
+  user-select: none;
+  align-self: center;
+}
+
+/* ——— Área gris + hojas blancas (ancho = A4 fijo) ——— */
+.doc-viewport {
+  width: var(--page-max-w);
+  max-width: none;
+  margin: 0 auto;
+  padding: 12px 0 28px;
+  counter-reset: docpage;
+}
+
+.doc-main {
+  margin: 0;
+}
+
+/* Hoja blanca: 210×297 mm (A4). Altura mínima A4; si el contenido excede, la hoja crece. */
+.doc-page {
+  position: relative;
+  box-sizing: border-box;
+  width: var(--page-max-w);
+  min-width: var(--page-max-w);
+  max-width: none;
+  min-height: var(--page-a4-h);
+  margin: 0 auto 16px;
+  background: var(--white);
+  box-shadow: var(--shadow-page);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 0;
+  scroll-margin-top: 3.5rem;
+  overflow: visible;
+}
+
+/* Numeración de hoja (impresión/PDF): todas las hojas salvo el pie; en pantalla se oculta y se muestra en el header. */
+.doc-main > .doc-page:not(.doc-page--footer) {
+  counter-increment: docpage;
+}
+
+.doc-main > .doc-page:not(.doc-page--footer)::before {
+  content: counter(docpage, decimal-leading-zero);
+  position: absolute;
+  top: calc(2.75rem + 2mm);
+  right: 14mm;
+  z-index: 2;
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  line-height: 1;
+  color: var(--blue-800);
+  font-variant-numeric: tabular-nums;
+  pointer-events: none;
+  user-select: none;
+}
+
+.doc-main > .doc-page:not(.doc-page--footer)::after {
+  content: none;
+}
+
+@media screen {
+  .doc-main > .doc-page:not(.doc-page--footer)::before {
+    display: none !important;
+  }
+}
+
+.doc-page--wide {
+  width: var(--page-max-w);
+  min-width: var(--page-max-w);
+  max-width: none;
+}
+
+/* Hojas compactas: exactamente A4; scroll interno si hace falta (índice, portadas tema, hub resultados) */
+.doc-page.doc-page--compact {
+  min-height: var(--page-a4-h);
+  height: var(--page-a4-h);
+  max-height: var(--page-a4-h);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.doc-page.doc-page--compact > .doc-page__inner {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Portadas de tema: altura A4 y overflow — ver styles/editorial.css */
+
+/* Tabla estadística: contenido fluye naturalmente, sin scroll interno */
+.doc-page.doc-page--dash-scroll {
+  min-height: var(--page-a4-h);
+  height: auto;
+  max-height: none;
+  overflow: visible;
+}
+
+.doc-page.doc-page--dash-scroll > .doc-page__inner--scroll {
+  overflow: visible;
+}
+
+/* Barra de secciones en cada hoja — diseño más limpio y moderno */
+.doc-page__nav {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 2.75rem;
+  padding: 0.5rem 1rem;
+  background: linear-gradient(90deg, #1f4f80 0%, #173f67 100%);
+  border-bottom: 1px solid #153a5c;
+  font-family: var(--font-sans);
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.doc-page__nav-inner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.4rem 0.2rem;
+  max-width: 100%;
+}
+
+.doc-page__nav-home {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 0.75rem;
+  padding: 0.35rem 0.6rem;
+  color: #e2ecf8;
+  background: rgba(255, 255, 255, 0.14);
+  border-radius: 999px;
+  line-height: 0;
+  transition: all 0.2s ease;
+}
+
+.doc-page__nav-home:hover {
+  background: rgba(255, 255, 255, 0.28);
+  color: #fff;
+}
+
+.doc-page__nav-links {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+}
+
+.doc-page__nav-link {
+  color: rgba(235, 245, 255, 0.82);
+  text-decoration: none;
+  padding: 0.3rem 0.5rem;
+  border-radius: 6px;
+  white-space: nowrap;
+  transition: all 0.2s ease;
+}
+
+.doc-page__nav-link:hover {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.16);
+  text-decoration: none;
+}
+
+.doc-page__nav-home--current {
+  background: #ffffff;
+  color: #14375a;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.55);
+}
+
+.doc-page__nav-link--current,
+.doc-page__nav-link[aria-current="page"] {
+  color: #153a5c;
+  background: #ffffff;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.6);
+}
+
+.doc-page__nav-sep {
+  color: rgba(255, 255, 255, 0.35);
+  user-select: none;
+  padding: 0 0.15rem;
+}
+
+.doc-page__inner {
+  max-width: none;
+  margin: 0;
+  padding: 12mm 14mm 14mm;
+  overflow: visible;
+}
+
+/* Portada = sin número de página */
+.doc-page--cover::after {
+  display: none;
+}
+
+/* Portada: A4 a sangre; imagen protagonista (marco mínimo, sensación informe) */
+.doc-page--cover {
+  padding: 0;
+  box-sizing: border-box;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  height: var(--page-a4-h);
+  min-height: var(--page-a4-h);
+  max-height: var(--page-a4-h);
+  background: var(--blue-950);
+}
+
+/* ——— Portada editorial: foto protagonista + capa azul + tipografía mínima ——— */
+.cover-hero--editorial {
+  position: relative;
+  flex: 1 1 auto;
+  min-height: 0;
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+  isolation: isolate;
+  background: var(--blue-950);
+}
+
+.cover-hero__visual {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background: var(--blue-900);
+}
+
+.cover-hero__bg-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  /* Desplaza el foco del portátil/reflejo hacia la derecha; libera el tercio inferior izquierdo */
+  object-position: 64% 48%;
+  display: block;
+}
+
+.cover-hero__overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  /* Oscurecimiento casi imperceptible bajo el título (sin caja); lectura arriba */
+  background:
+    radial-gradient(ellipse 110% 65% at 8% 92%, rgba(10, 22, 40, 0.16) 0%, transparent 52%),
+    linear-gradient(180deg, rgba(10, 22, 40, 0.38) 0%, rgba(10, 22, 40, 0.08) 18%, transparent 32%),
+    linear-gradient(
+      25deg,
+      transparent 0%,
+      transparent 46%,
+      rgba(10, 22, 40, 0.2) 78%,
+      rgba(10, 22, 40, 0.52) 100%
+    ),
+    linear-gradient(90deg, rgba(10, 22, 40, 0.22) 0%, transparent 45%);
+}
+
+.cover-hero__content {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 0;
+}
+
+.cover-hero__masthead {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 4;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1.25rem;
+  padding: 2.5mm 5mm 0 0;
+  margin: 0;
+  background: none;
+  border: none;
+  pointer-events: none;
+}
+
+.doc-page--cover .cover-hero__masthead {
+  justify-content: flex-end;
+  padding: 5mm 7mm 0 0;
+}
+
+.cover-hero__masthead .cover-hero__logo,
+.cover-hero__masthead .cover-hero__logo-efacticom {
+  pointer-events: auto;
+}
+
+.cover-hero__brand-inst {
+  display: flex;
+  align-items: flex-start;
+  margin: 0;
+  padding: 0;
+}
+
+.cover-hero__logo {
+  height: auto;
+  max-height: 58px;
+  width: auto;
+  max-width: 280px;
+  object-fit: contain;
+  object-position: left top;
+  filter: drop-shadow(0 1px 14px rgba(10, 22, 40, 0.55));
+}
+
+.cover-hero__logo--minciencias {
+  max-height: 56px;
+  max-width: 300px;
+}
+
+/* Marca EFACTICOM: un solo bloque alineado a la derecha (sin línea suelta entre logo y slogan) */
+.cover-hero__mark {
+  margin: 0;
+  padding: 0;
+  border: none;
+  background: none;
+  box-shadow: none;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: flex-start;
+  text-align: right;
+  gap: 0.42rem;
+  max-width: min(72vw, 19rem);
+}
+
+.cover-hero__logo-efacticom {
+  display: block;
+  height: auto;
+  max-height: 74px;
+  width: auto;
+  max-width: min(100%, 360px);
+  object-fit: contain;
+  object-position: right center;
+  flex-shrink: 0;
+  filter: drop-shadow(0 1px 14px rgba(10, 22, 40, 0.5));
+}
+
+.cover-hero__tagline {
+  margin: 0;
+  padding: 0;
+  border: none;
+  font-family: "Montserrat", var(--font-sans);
+  font-size: clamp(0.56rem, 1.05vw, 0.66rem);
+  font-weight: 600;
+  letter-spacing: 0.11em;
+  line-height: 1.45;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.88);
+  text-shadow: 0 1px 10px rgba(10, 22, 40, 0.5);
+  text-wrap: balance;
+  max-width: min(100%, 19rem);
+}
+
+.cover-hero__stage {
+  flex: 1 1 auto;
+  min-height: 0;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: flex-start;
+  padding: 0 9mm 10mm 5mm;
+}
+
+.cover-hero__title-wrap {
+  position: relative;
+  z-index: 3;
+  width: 100%;
+  max-width: none;
+  text-align: left;
+  padding: 0;
+  margin-bottom: 0;
+}
+
+.doc-page--cover .cover__headline {
+  font-family: var(--font-sans);
+  font-size: clamp(1.5rem, 3.3vw, 2.05rem);
+  font-weight: 800;
+  line-height: 1.22;
+  margin: 0;
+  width: min(100%, 40ch);
+  max-width: 40ch;
+  letter-spacing: -0.02em;
+  text-wrap: balance;
+  white-space: normal;
+  color: #fff;
+  text-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.35),
+    0 2px 24px rgba(10, 22, 40, 0.65),
+    0 0 1px rgba(10, 22, 40, 0.9);
+}
+
+.doc-page--cover .cover__headline em {
+  font-style: italic;
+}
+
+.doc-page--cover .cover-hero__subline {
+  margin: 0.55rem 0 0;
+  width: min(100%, 46ch);
+  max-width: 46ch;
+  font-size: clamp(1.14rem, 1.5vw, 1.3rem);
+  font-weight: 500;
+  line-height: 1.5;
+  white-space: normal;
+  text-wrap: pretty;
+  letter-spacing: 0.01em;
+  color: rgba(255, 255, 255, 0.92);
+  text-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.3),
+    0 1px 16px rgba(10, 22, 40, 0.55);
+}
+
+.cover-hero__year {
+  margin: 0.65rem 0 0;
+  width: 100%;
+  padding-top: 0.45rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.18);
+  font-family: "Montserrat", var(--font-sans);
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.38em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.72);
+  user-select: none;
+  text-shadow: 0 1px 12px rgba(10, 22, 40, 0.5);
+}
+
+/* Mosaico reutilizable fuera del hero (si se usa en otro sitio) */
+.image-mosaic {
+  display: grid;
+  grid-template-columns: 1.6fr 1fr;
+  grid-template-rows: 130px 130px;
+  gap: 0.5rem;
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid rgba(15, 39, 68, 0.08);
+  box-shadow: var(--shadow-card);
+  background: #0f2744;
+}
+
+.image-mosaic__item {
+  margin: 0;
+  position: relative;
+}
+
+.image-mosaic__item::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(160deg, rgba(9, 18, 33, 0.15), rgba(15, 39, 68, 0.48));
+}
+
+.image-mosaic__item--1 {
+  grid-row: 1 / span 2;
+}
+
+.image-mosaic__item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+
+/* Secciones internas (contenido tipo informe) */
+.section-title {
+  font-family: var(--font-sans);
+  font-size: clamp(1.35rem, 3.5vw, 1.75rem);
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  margin: 0;
+  color: var(--blue-900);
+  line-height: 1.2;
+}
+
+.section-header {
+  margin-bottom: 1.5rem;
+}
+
+/* Misma sección temática en varias hojas A4 (p. ej. Contexto) */
+.context-continued-kicker {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--blue-600);
+  margin: 0 0 0.25rem;
+}
+
+.context-continued-title {
+  margin: 0 0 0.15rem;
+}
+
+.context-continued-note {
+  margin: 0 0 1rem;
+  font-size: 0.8rem;
+}
+
+.section-kicker {
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--blue-600);
+  margin: 0 0 0.35rem;
+}
+
+.section-spaced {
+  margin-top: 2rem;
+}
+
+.h3 {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--blue-800);
+  margin: 1.5rem 0 0.65rem;
+}
+
+.prose p {
+  margin: 0 0 1rem;
+}
+
+.prose--emphasis {
+  font-style: italic;
+  color: var(--blue-800);
+}
+
+.text-muted {
+  color: var(--slate-500);
+  font-size: 0.92rem;
+}
+
+/* Documento a ancho A4 fijo: grid 60/40 para mayor importancia de esquemas/gráficos */
+.grid-60-40 {
+  display: grid;
+  gap: 3rem;
+  grid-template-columns: 1.1fr 1fr;
+  align-items: start;
+}
+
+.two-col {
+  display: grid;
+  gap: 1.5rem;
+  grid-template-columns: 1fr 1fr;
+  align-items: start;
+}
+
+.block-note {
+  margin-top: 2rem;
+  padding: 1.25rem 1.5rem;
+  border-radius: var(--radius-md);
+  background: var(--blue-100);
+  border: 1px solid rgba(37, 99, 171, 0.15);
+}
+
+.block-note h3 {
+  margin-top: 0;
+  font-size: 1rem;
+}
+
+.metric-chips-row {
+  display: flex;
+  gap: 1rem;
+  margin: 1.5rem 0;
+}
+
+.metric-chip {
+  flex: 1;
+  background: var(--white);
+  border: 1px solid var(--slate-200);
+  border-radius: 12px;
+  padding: 1.25rem 1rem;
+  text-align: center;
+  box-shadow: 0 4px 16px rgba(15, 39, 68, 0.04);
+}
+
+.mc-val {
+  display: block;
+  font-size: 2rem;
+  font-weight: 800;
+  color: var(--blue-600);
+  line-height: 1;
+  margin-bottom: 0.25rem;
+}
+
+.mc-lbl {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--slate-600);
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+}
+
+.panel--diagram-clean {
+  background: transparent;
+  padding: 0;
+  margin-top: 2rem;
+}
+
+.quote {
+  margin: 1.5rem 0;
+  padding: 1rem 1.25rem;
+  border-left: 3px solid var(--blue-600);
+  background: rgba(232, 240, 251, 0.6);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  font-style: italic;
+  color: var(--blue-800);
+}
+
+/* Índice inline dentro de páginas (resultados) */
+.doc-toc-inline {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.35rem 0.5rem;
+  margin: 1.25rem 0 1.5rem;
+  padding: 0.5rem 0.75rem;
+  background: var(--blue-100);
+  border: 1px solid rgba(37, 99, 171, 0.12);
+  border-radius: var(--radius-sm);
+  font-size: 0.8rem;
+}
+
+.doc-toc-inline__label {
+  color: var(--slate-500);
+  font-weight: 600;
+  margin-right: 0.25rem;
+}
+
+.doc-toc-inline__dot {
+  color: var(--slate-500);
+  user-select: none;
+}
+
+.doc-toc-inline a {
+  font-weight: 600;
+}
+
+/* Pie de documento (última hoja) — mantiene altura A4 */
+.doc-page--footer {
+  margin-bottom: 0.5rem;
+  height: var(--page-a4-h);
+  min-height: var(--page-a4-h);
+}
+
+.doc-page--footer.site-footer {
+  background: #f8fafc;
+  color: var(--blue-900);
+  padding: 0;
+  border-top: 3px solid var(--blue-200);
+  display: flex;
+  flex-direction: column;
+}
+
+.site-footer__grid {
+  display: flex;
+  justify-content: center;
+  gap: 3.5rem;
+  align-items: center;
+  margin: auto 0;
+  flex: 1;
+  padding: 2rem;
+}
+
+.footer-logo-slot {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: transparent;
+  padding: 0;
+  border-radius: 0;
+  box-shadow: none;
+  height: auto;
+}
+
+.footer-logo-slot:not(:last-child) {
+  padding-right: 3.5rem;
+  border-right: 1px solid rgba(15, 39, 68, 0.08);
+}
+
+.footer-logo-slot img {
+  max-width: 155px;
+  max-height: 80px;
+  object-fit: contain;
+  opacity: 0.9;
+}
+
+.footer-logo-slot--in3 img {
+  max-width: min(100%, 280px);
+  max-height: 76px;
+}
+
+.footer-logo-slot--efacticom img {
+  max-width: min(100%, 220px);
+  max-height: 56px;
+}
+
+.site-footer__meta {
+  margin-top: auto;
+  padding: 2.5rem 0;
+  border-top: 1px solid rgba(15, 39, 68, 0.08);
+  text-align: center;
+}
+
+.site-footer__meta [data-footer-note] {
+  font-size: 0.92rem;
+  font-weight: 500;
+  color: var(--blue-950);
+  max-width: 48rem;
+  margin: 0 auto 0.85rem auto;
+}
+
+.contact-line {
+  margin: 0;
+  font-size: 0.82rem;
+  color: var(--slate-500);
+}
+
+.contact-line span {
+  color: var(--blue-700);
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}

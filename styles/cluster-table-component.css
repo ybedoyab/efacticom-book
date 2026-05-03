@@ -1,0 +1,105 @@
+.cluster-card {
+  width: 100%;
+  border: 1px solid rgba(148, 163, 184, 0.45);
+  border-radius: 8px;
+  overflow: hidden;
+  background: #ffffff;
+}
+
+.cluster-card__title {
+  margin: 0;
+  padding: 0.5rem 0.65rem 0.48rem;
+  background: linear-gradient(90deg, #1f4f80 0%, #2b66a5 100%);
+  color: #ffffff;
+  font-size: 0.84rem;
+  font-weight: 800;
+  line-height: 1.1;
+  text-align: center;
+}
+
+.cluster-card__section {
+  padding: 0.3rem 0.34rem;
+}
+
+.cluster-card__section + .cluster-card__section {
+  border-top: 1px solid rgba(226, 232, 240, 0.95);
+}
+
+.cluster-card__section-title {
+  margin: 0 0 0.22rem;
+  color: var(--blue-800);
+  font-size: 0.52rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.cluster-card__cluster-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.12rem;
+}
+
+.cluster-card__cluster-item {
+  display: block;
+  padding: 0.22rem 0.28rem;
+  border-radius: 3px;
+  background: #d9dee7;
+  color: #1e293b;
+  font-size: 0.56rem;
+  font-weight: 600;
+  line-height: 1.1;
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.cluster-card__cluster-item--accent {
+  background: linear-gradient(90deg, #3f6fb2 0%, #557fbe 100%);
+  color: #ffffff;
+}
+
+.cluster-card__vars-grid {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 0.1rem;
+  max-height: none;
+  overflow: visible;
+  padding-right: 0;
+}
+
+.cluster-card__vars-grid--incident {
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+}
+
+.cluster-card__vars-grid--observed {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.cluster-card__var-item {
+  display: block;
+  padding: 0.16rem 0.2rem;
+  border-radius: 3px;
+  background: #b8c9e5;
+  color: #1f4f80;
+  font-size: 0.43rem;
+  line-height: 1.06;
+  font-weight: 500;
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.cluster-card__var-item--incident {
+  font-size: 0.41rem;
+  line-height: 1.04;
+  background: #a7bbda;
+}
+
+.cluster-card__var-item--selected {
+  background: linear-gradient(90deg, #3f6fb2 0%, #557fbe 100%);
+  color: #ffffff;
+  font-weight: 700;
+}

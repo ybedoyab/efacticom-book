@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="" />
+    <title>EFACTICOM — Cartilla digital</title>
+    <link rel="icon" href="assets/icons/favicon.svg" type="image/svg+xml" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Instrument+Serif:ital@0;1&family=Montserrat:wght@500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles/main.css" />
+    <link rel="stylesheet" href="styles/components.css" />
+    <link rel="stylesheet" href="styles/editorial.css" />
+    <link rel="stylesheet" href="styles/about-editorial.css" />
+    <link rel="stylesheet" href="styles/cluster-table-component.css" />
+    <link rel="stylesheet" href="styles/context-editorial.css" />
+    <link rel="stylesheet" href="styles/results-editorial.css" />
+    <link rel="stylesheet" href="styles/closing-editorial.css" />
+    <link rel="stylesheet" href="styles/print.css" />
+  </head>
+  <body class="efacticom doc-mode">
+    <a class="skip-link" href="#main">Ir al contenido</a>
+
+    <header class="doc-toolbar no-print" role="banner">
+      <div class="doc-toolbar__inner">
+        <div class="doc-toolbar__left">
+          <span class="doc-toolbar__title">EFACTICOM</span>
+          <span class="doc-toolbar__subtitle">2026</span>
+        </div>
+        <div class="doc-toolbar__cluster">
+          <nav class="doc-toolbar__nav" aria-label="Índice del documento">
+            <ul class="doc-toolbar__list" data-nav-list></ul>
+          </nav>
+          <span class="doc-toolbar__page-num" data-doc-page-num aria-live="polite">01</span>
+        </div>
+        <div class="doc-toolbar__actions">
+          <button
+            type="button"
+            class="doc-toolbar__pdf"
+            data-action-print
+            aria-label="Guardar o imprimir el documento como PDF"
+          >
+            <svg class="doc-toolbar__pdf-icon" width="18" height="18" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+              <path
+                fill="currentColor"
+                d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zm4 18H6V4h7v5h5v11zM8 12h8v2H8v-2zm0 4h8v2H8v-2z"
+              />
+            </svg>
+            <span>Guardar PDF</span>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <div class="doc-viewport">
+      <main id="main" class="doc-main">
+        <!-- 1. Portada editorial (informe premium; imagen protagonista) -->
+        <section id="hero" class="doc-page doc-page--cover" data-section-hero>
+          <div class="cover-hero cover-hero--editorial">
+            <div class="cover-hero__visual" data-cover-visual aria-hidden="true"></div>
+            <div class="cover-hero__overlay" aria-hidden="true"></div>
+            <div class="cover-hero__content">
+              <header class="cover-hero__masthead">
+                <div class="cover-hero__mark">
+                  <img
+                    class="cover-hero__logo-efacticom"
+                    data-logo-efacticom
+                    src="assets/logos/efacticom-blue.png"
+                    alt="EFACTICOM"
+                    width="340"
+                    height="72"
+                  />
+                </div>
+              </header>
+              <div class="cover-hero__stage">
+                <div class="cover-hero__title-wrap">
+                  <h1 class="cover__headline" data-hero-headline></h1>
+                  <p class="cover__subline cover-hero__subline" data-hero-subline></p>
+                  <p class="cover-hero__year" data-cover-year>2026</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- 2. Contenido -->
+        <section id="contenido" class="doc-page doc-page--toc doc-page--compact" aria-labelledby="toc-heading">
+          <span id="toc-heading" class="sr-only">Tabla de contenidos</span>
+          <div class="section-inner doc-page__inner">
+            <p class="toc-watermark" data-toc-watermark aria-hidden="true"></p>
+            <div data-toc-body></div>
+          </div>
+        </section>
+
+        <!-- 3. Portada tema + Acerca -->
+        <section id="cover-acerca" class="doc-page doc-page--section-cover doc-page--compact" aria-label="Portada de sección">
+          <nav class="doc-page__nav" data-doc-page-nav aria-label="Secciones del documento"></nav>
+          <div class="section-cover" data-section-cover data-section-key="acerca"></div>
+        </section>
+
+        <!-- Acerca: hoja 1 — 1. Introducción (texto) + 2. encabezado Conglomerado -->
+        <section id="acerca" class="doc-page doc-page--about doc-page--about-sheet doc-page--about-narrative">
+          <nav class="doc-page__nav" data-doc-page-nav aria-label="Secciones del documento"></nav>
+          <div class="section-inner doc-page__inner doc-page__inner--about-narrative">
+            <p class="about-eyebrow" data-about-eyebrow hidden></p>
+            <h2 id="acerca-intro" class="about-chapter-title" data-about-chapter-title>Acerca del software</h2>
+            <div class="about-narrative about-narrative--justify" data-about-narrative></div>
+
+            <!-- Inicio sección 2 en la misma hoja A4 -->
+            <h2 id="acerca-conglomerado-title" class="about-cong-title" data-about-conglomerado-title></h2>
+            <div class="vars-table-scroll" data-variables-accordion></div>
+          </div>
+        </section>
+
+        <!-- Acerca: hoja 2 — tabla HTML de clústeres + 3. Clústeres + tabla clusterización + figura + funciones -->
+        <section
+          id="acerca-conglomerado"
+          class="doc-page doc-page--about doc-page--about-sheet doc-page--about-conglomerado"
+          aria-label="Acerca del software — conglomerado de variables"
+        >
+          <nav class="doc-page__nav" data-doc-page-nav aria-label="Secciones del documento"></nav>
+          <div class="section-inner doc-page__inner doc-page__inner--about-conglomerado">
+            <h3 id="acerca-clusters-section" class="h3 about-vars-table-title" data-about-clusters-section-title></h3>
+            <figure class="about-cong-table-wide">
+              <div class="about-cong-table-wide__frame" data-about-cluster-table-component></div>
+            </figure>
+            <figure id="acerca-clusteres" class="about-synth-figure" aria-label="Figura sintetizada de clústeres">
+              <p class="about-synth-figure__lead" data-about-synth-lead></p>
+              <div class="about-synth-figure__frame" data-cluster-diagram></div>
+              <figcaption class="about-synth-figure__cap" data-about-synth-caption></figcaption>
+            </figure>
+            <div class="about-narrative about-narrative--justify about-narrative--functions" data-about-functions-merged></div>
+          </div>
+        </section>
+
+
+        <section id="cover-contexto" class="doc-page doc-page--section-cover doc-page--compact" aria-label="Portada de sección">
+          <nav class="doc-page__nav" data-doc-page-nav aria-label="Secciones del documento"></nav>
+          <div class="section-cover" data-section-cover data-section-key="contexto"></div>
+        </section>
+
+        <section id="contexto" class="doc-page doc-page--context">
+          <nav class="doc-page__nav" data-doc-page-nav aria-label="Secciones del documento"></nav>
+          <div class="section-inner doc-page__inner doc-page__inner--context">
+            <header class="section-header section-header--context">
+              <p class="about-eyebrow" data-context-page-eyebrow></p>
+              <h2 class="about-chapter-title">Contexto del software</h2>
+            </header>
+            <div class="context-stack" data-context-content>
+              <h3 id="contexto-camino" class="h3 h3--context-lead" data-context-lead></h3>
+              <div class="prose prose--context" data-context-paras></div>
+              <aside class="context-insight" aria-label="Origen conceptual">
+                <p class="context-insight__kicker" data-context-insight-kicker></p>
+                <p class="context-insight__name" data-context-attribution-name></p>
+                <p class="context-insight__detail" data-context-attribution-detail></p>
+              </aside>
+            </div>
+            <div class="context-ecosystem-wrap" data-context-ecosystem></div>
+          </div>
+        </section>
+
+        <section id="contexto-etapas-1" class="doc-page doc-page--timeline-all">
+          <nav class="doc-page__nav" data-doc-page-nav aria-label="Secciones del documento"></nav>
+          <div class="section-inner doc-page__inner">
+            <h3 id="contexto-etapas-title" class="h3 context-continued-title">5. Etapas del proyecto</h3>
+            <div class="timeline-wrap" data-timeline-slice="1"></div>
+          </div>
+        </section>
+
+        <!-- 5. Resultados (una hoja A4 por bloque) -->
+        <section id="cover-resultados" class="doc-page doc-page--section-cover doc-page--compact" aria-label="Portada de sección">
+          <nav class="doc-page__nav" data-doc-page-nav aria-label="Secciones del documento"></nav>
+          <div class="section-cover" data-section-cover data-section-key="resultados"></div>
+        </section>
+
+        <section id="resultados" class="doc-page doc-page--wide doc-page--results-hub doc-page--results-sheet">
+          <nav class="doc-page__nav" data-doc-page-nav aria-label="Secciones del documento"></nav>
+          <div class="section-inner doc-page__inner doc-page__inner--results-hub" data-results-content>
+            <header class="section-header section-header--results">
+              <p class="about-eyebrow" data-results-page-eyebrow></p>
+              <h2 id="resultados-title" class="about-chapter-title">6. Reportes y analítica</h2>
+            </header>
+
+            <div class="results-hub">
+              <p class="results-hub__interpretation" data-results-interpretation></p>
+              <p class="results-hub__deck" data-results-deck></p>
+              <p class="results-hub__scope-title" data-results-scope-title></p>
+              <div class="results-hub__chips filter-bar filter-bar--static" data-results-static-chips></div>
+              <div class="results-hub__kpi-donuts">
+                <div class="results-hub__kpi" data-results-main-kpi></div>
+                <div class="results-hub__donuts" data-results-donut-row></div>
+              </div>
+              <figure class="results-hub__trend">
+                <figcaption class="results-hub__trend-cap">Evolución mensual del índice global de productividad</figcaption>
+                <div class="results-hub__trend-chart" data-results-trend-chart></div>
+              </figure>
+            </div>
+          </div>
+        </section>
+
+        <section id="dash-a" class="doc-page doc-page--wide doc-page--report-dash doc-page--results-sheet doc-page--combined-analytics">
+          <nav class="doc-page__nav" data-doc-page-nav aria-label="Secciones del documento"></nav>
+          <div class="section-inner doc-page__inner doc-page__inner--report-dash">
+            <div id="dash-c" class="report-dash__legacy-anchor" aria-hidden="true"></div>
+            <article class="report-dash report-dash--combined-ac" data-dash-a>
+              <h3 id="dash-a-title" class="report-dash__title" data-dash-heading="a"></h3>
+              <h4 class="report-dash__subtitle report-dash__subtitle--excel">Dashboard productividad transdisciplinar</h4>
+              <div class="dashboard-productividad" data-dashboard-productividad></div>
+              <p class="report-dash__note report-dash__note--insight report-dash__note--excel" data-dash-analysis-main></p>
+            </article>
+          </div>
+        </section>
+
+        <section id="dash-b" class="doc-page doc-page--wide doc-page--report-dash doc-page--results-sheet">
+          <nav class="doc-page__nav" data-doc-page-nav aria-label="Secciones del documento"></nav>
+          <div class="section-inner doc-page__inner doc-page__inner--report-dash">
+            <article class="report-dash report-dash--transdisciplinar" data-dash-b>
+              <h3 class="report-dash__title" data-dash-heading="b"></h3>
+              
+              <div class="report-dash__merged-grid">
+                <div class="report-dash__split-section report-dash__split-section--framed">
+                  <h4 class="report-dash__subtitle">Por turno</h4>
+                  <div class="dt-grid dt-grid--turno" data-turno-charts></div>
+                </div>
+                
+                <div class="report-dash__split-section report-dash__split-section--framed" data-dash-b-centro>
+                  <h4 class="report-dash__subtitle">Por centro de trabajo</h4>
+                  <p class="report-dash__note" data-dash-note-b-centro style="display:none;"></p>
+                  <div class="dt-grid dt-grid--centro" data-centro-charts></div>
+                </div>
+              </div>
+              <div class="report-dash__analysis" data-dash-b-analysis></div>
+            </article>
+          </div>
+        </section>
+
+        <!-- 6. Cierre -->
+        <section id="cover-cierre" class="doc-page doc-page--section-cover doc-page--compact" aria-label="Portada de sección">
+          <nav class="doc-page__nav" data-doc-page-nav aria-label="Secciones del documento"></nav>
+          <div class="section-cover" data-section-cover data-section-key="cierre"></div>
+        </section>
+
+        <section id="cierre" class="doc-page doc-page--closing" aria-label="Cierre y proyección">
+          <nav class="doc-page__nav" data-doc-page-nav aria-label="Secciones del documento"></nav>
+          <div class="section-inner doc-page__inner doc-page__inner--closing" data-closing-content>
+            <header class="closing-hero">
+              <h2 class="closing-hero__title" data-closing-title></h2>
+            </header>
+            <div class="closing-blocks" data-closing-blocks></div>
+            <div class="closing-cta" data-closing-cta-standalone>
+              <a
+                class="closing-cta__block"
+                data-closing-cta-link
+                href="#"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <span class="closing-cta__intro" data-closing-cta-text></span>
+                <span class="closing-cta__btn-label">
+                  <svg
+                    class="closing-cta__icon"
+                    width="20"
+                    height="20"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                    aria-hidden="true"
+                  >
+                    <path
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6M15 3h6v6M10 14L21 3"
+                    />
+                  </svg>
+                  <span data-closing-cta-btn-label></span>
+                </span>
+              </a>
+            </div>
+          </div>
+        </section>
+      </main>
+
+      <footer class="doc-page doc-page--footer site-footer site-footer--back-cover" role="contentinfo">
+        <div class="section-inner doc-page__inner doc-page__inner--back-cover" style="flex: 1; display: flex; flex-direction: column; justify-content: center; min-height: 0; padding-top: 1.5rem; padding-bottom: 1.25rem;">
+          <div class="back-cover__logos back-cover__logos--top" style="display: flex; justify-content: center; padding-bottom: 1.5rem;">
+            <div class="back-cover__logo-slot back-cover__logo-slot--efac">
+              <img src="assets/logos/efacticom-blue.png" alt="EFACTICOM" width="500" height="136" />
+            </div>
+          </div>
+          <p class="back-cover__tagline" data-back-tagline style="text-align: center; max-width: 44rem; margin: 0 auto 1.5rem;"></p>
+          <div class="back-cover__logos back-cover__logos--sponsors" style="display: flex; justify-content: center; gap: 4rem; margin-bottom: 2.5rem; padding-top: 0;">
+            <div class="back-cover__logo-slot back-cover__logo-slot--in3">
+              <img src="assets/logos/in3-texto.png" alt="IN3" width="300" height="149" />
+            </div>
+            <div class="back-cover__logo-slot back-cover__logo-slot--minciencias">
+              <img src="assets/logos/minciencias.png" alt="Minciencias" width="500" height="91" />
+            </div>
+          </div>
+          <div class="back-cover__contact" data-back-contact style="max-width: 44rem; margin: 0 auto;"></div>
+          <div class="back-cover__meta" style="justify-content: center; max-width: 44rem; margin: 1rem auto 0; text-align: center;">
+            <span class="back-cover__meta-left" data-back-copyright style="max-width: none; text-align: center; color: var(--slate-600); font-weight: normal; font-size: 0.62rem;"></span>
+          </div>
+        </div>
+      </footer>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+    <script src="scripts/data.js"></script>
+    <script src="scripts/ui.js"></script>
+    <script src="scripts/pdf-export.js"></script>
+    <script src="scripts/animations.js"></script>
+    <script src="scripts/main.js" defer></script>
+  </body>
+</html>

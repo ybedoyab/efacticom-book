@@ -1,0 +1,1405 @@
+/**
+ * EFACTICOM — Impresión y exportación PDF (navegador).
+ * A4 vertical; cada .doc-page en <main> fuerza nueva hoja; el pie es hoja propia.
+ */
+
+@page {
+  size: A4 portrait;
+  margin: 0;
+}
+
+@media print {
+  html {
+    scroll-behavior: auto !important;
+  }
+  
+  /* Optimización de peso del PDF: imprimir imágenes a su tamaño real, no escalarlas */
+  img {
+    image-rendering: auto;
+    max-width: 100% !important;
+    height: auto !important;
+  }
+  
+  /* Evitar rasterización de SVG a alta resolución */
+  svg {
+    max-width: 100% !important;
+    shape-rendering: geometricPrecision;
+  }
+  
+  * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  body.doc-mode {
+    background: #e2e8f0 !important; /* same as screen, or #fff */
+    min-width: 0 !important;
+  }
+
+  .no-print,
+  .doc-toolbar,
+  .skip-link {
+    display: none !important;
+  }
+
+  .doc-viewport {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    background: #fff !important;
+  }
+
+  /* Cada bloque .doc-page del documento = nueva hoja en PDF (salvo el primero) */
+  .doc-main > .doc-page:not(:first-child) {
+    page-break-before: always !important;
+    break-before: page !important;
+  }
+
+  /* Acerca (hoja 1 -> hoja 2): mantener salto de página limpio. */
+  .doc-main > #acerca-conglomerado.doc-page {
+    page-break-before: always !important;
+    break-before: page !important;
+  }
+
+  footer.doc-page.doc-page--footer {
+    page-break-before: always !important;
+    break-before: page !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+  }
+
+  .doc-page {
+    max-width: 100% !important;
+    width: 100% !important;
+    height: auto !important;
+    min-height: 0 !important;
+    max-height: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    box-shadow: none !important;
+    border: none !important;
+    border-radius: 0 !important;
+    overflow: visible !important;
+    display: block !important;
+    page-break-after: auto !important;
+    page-break-inside: auto !important;
+    break-inside: auto !important;
+    box-sizing: border-box !important;
+  }
+
+  /* Índice y portadillas: una hoja A4 completa (el min-height: 0 general no aplica aquí) */
+  .doc-main > .doc-page.doc-page--toc.doc-page--compact {
+    min-height: 297mm !important;
+  }
+
+  .doc-main > .doc-page.doc-page--section-cover.doc-page--compact {
+    min-height: 297mm !important;
+    height: 297mm !important;
+    max-height: 297mm !important;
+    overflow: hidden !important;
+  }
+
+  .doc-main > .doc-page.doc-page--section-cover.doc-page--compact > .section-cover {
+    min-height: 297mm !important;
+    height: 297mm !important;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .doc-main > .doc-page.doc-page--section-cover.doc-page--compact .section-cover__shell {
+    min-height: 297mm !important;
+    height: 100% !important;
+    flex: 1 1 auto;
+  }
+
+  .doc-page::after {
+    display: none !important;
+  }
+
+  /* Numeración de hoja: se muestra dentro de la barra de navegación */
+  .doc-main > .doc-page:not(.doc-page--footer)::before {
+    display: none !important;
+  }
+
+  .doc-main > .doc-page--cover::before {
+    color: rgba(255, 255, 255, 0.88) !important;
+  }
+
+  .doc-page--cover {
+    border-top: none !important;
+    page-break-after: auto;
+    border-radius: 0 !important;
+    padding: 0 !important;
+    height: 297mm !important;
+    min-height: 297mm !important;
+    max-height: 297mm !important;
+    box-sizing: border-box !important;
+    overflow: hidden !important;
+    display: flex !important;
+    flex-direction: column !important;
+    background: #0a1628 !important;
+  }
+
+  .cover-hero--editorial {
+    position: relative !important;
+    flex: none !important;
+    display: block !important;
+    width: 100% !important;
+    min-height: 297mm !important;
+    height: 297mm !important;
+    max-height: 297mm !important;
+    break-inside: avoid !important;
+    page-break-inside: avoid !important;
+    overflow: hidden !important;
+  }
+
+  .cover-hero__visual {
+    position: absolute !important;
+    inset: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    min-height: 297mm !important;
+    z-index: 0 !important;
+    overflow: hidden !important;
+  }
+
+  .cover-hero__bg-img {
+    display: block !important;
+    width: 100% !important;
+    height: 100% !important;
+    min-height: 297mm !important;
+    object-fit: cover !important;
+    object-position: 64% 48% !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  .cover-hero__overlay {
+    position: absolute !important;
+    inset: 0 !important;
+    z-index: 1 !important;
+    height: 100% !important;
+    min-height: 297mm !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  .cover-hero__content {
+    position: relative !important;
+    z-index: 2 !important;
+    height: 100% !important;
+    min-height: 297mm !important;
+  }
+
+  .cover-hero__year {
+    color: rgba(255, 255, 255, 0.72) !important;
+    border-top-color: rgba(255, 255, 255, 0.18) !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  .cover-hero__tagline {
+    color: rgba(255, 255, 255, 0.88) !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  .cover-hero__mark {
+    border-right-color: rgba(96, 165, 216, 0.45) !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  .doc-page--cover .cover__headline {
+    color: #fff !important;
+    text-shadow:
+      0 1px 2px rgba(0, 0, 0, 0.35),
+      0 2px 18px rgba(10, 22, 40, 0.6) !important;
+  }
+
+  .doc-page--cover .cover-hero__subline {
+    font-size: 1.15rem !important;
+    line-height: 1.45 !important;
+    color: rgba(255, 255, 255, 0.92) !important;
+  }
+
+  .doc-page__inner {
+    padding: 0 !important;
+    overflow: visible !important;
+  }
+
+  /* Márgenes de lectura en PDF (evita texto y zigzag pegados al borde) */
+  .doc-page:not(.doc-page--cover):not(.doc-page--section-cover) .doc-page__inner {
+    padding: 10mm 12mm 12mm !important;
+    box-sizing: border-box !important;
+  }
+
+  /* Evitar viudas/huérfanas básicas */
+  p,
+  li {
+    orphans: 3;
+    widows: 3;
+  }
+
+  .section-header,
+  .section-title {
+    break-after: avoid;
+    page-break-after: avoid;
+  }
+
+  .cover__alts {
+    color: #334155 !important;
+  }
+
+  /* Bloques pequeños: intentar no partir al medio */
+  .kpi-card,
+  .filter-bar,
+  .chart-card,
+  .donut-row,
+  .timeline-card,
+  .accordion-item,
+  .benefits-list li,
+  .quote,
+  .block-note,
+  .doc-toc-inline {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+
+  /* Secciones de dashboard largas: permitir salto entre sub-bloques */
+  .dashboard-section,
+  .report-dash {
+    break-inside: auto;
+    page-break-inside: auto;
+    box-shadow: none !important;
+    border: none !important;
+    margin-top: 0 !important;
+    padding: 0 !important;
+  }
+  
+  .results-hub__trend-chart svg.trend-svg {
+    max-height: 240px !important;
+  }
+
+  .dashboard-section__title,
+  .report-dash__title {
+    break-after: avoid;
+    page-break-after: avoid;
+  }
+
+  #resultados .results-hub__interpretation,
+  #resultados .results-kpi-hero,
+  #resultados .category-strip,
+  #resultados .results-hub__trend {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+
+  .stats-summary {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+
+  .dash-row {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+
+  .dashboard-tile {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+
+  .dt-chart {
+    break-inside: avoid;
+    page-break-inside: avoid;
+    box-shadow: none !important;
+    border: 1px solid #cbd5e1 !important;
+  }
+
+  /* KPI en impresión: fondo claro para evitar franjas oscuras al partir página */
+  .kpi-card {
+    background: #f1f5f9 !important;
+    color: #0f172a !important;
+    border: 1px solid #cbd5e1 !important;
+    box-shadow: none !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  .kpi-card__label,
+  .kpi-card__value,
+  .kpi-card__value .kpi-card__suffix,
+  .kpi-card__hint {
+    color: #0f172a !important;
+  }
+
+  .cluster-diagram {
+    max-width: 100%;
+    max-height: 240px;
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+
+  .about-synth-diagram__img {
+    max-width: 100% !important;
+    max-height: 96mm !important;
+    object-fit: contain !important;
+    display: block !important;
+    margin: 0 auto !important;
+  }
+
+  .about-synth-figure {
+    display: flex !important;
+    flex-direction: column !important;
+    overflow: hidden !important;
+  }
+
+  .about-synth-figure__frame {
+    max-height: 102mm !important;
+    overflow: hidden !important;
+  }
+
+  .about-synth-figure__cap {
+    position: static !important;
+    z-index: 2 !important;
+    margin-top: 0 !important;
+    padding-top: 0.42rem !important;
+    background: rgba(248, 250, 252, 0.98) !important;
+    line-height: 1.25 !important;
+  }
+
+  /* GSAP deja opacity/transform hasta hacer scroll; en impresión no hay scroll */
+  main img,
+  [data-cluster-diagram] img,
+  .about-synth-diagram__img,
+  .about-cong-table-wide__img,
+  .about-synth-figure__frame {
+    opacity: 1 !important;
+    visibility: visible !important;
+    transform: none !important;
+  }
+
+  .doc-page .section-header,
+  .doc-page .section-title,
+  .doc-page .section-kicker,
+  [data-timeline-card],
+  .report-dash,
+  .dashboard-section,
+  .benefits-list li,
+  [data-cluster-node] {
+    opacity: 1 !important;
+    visibility: visible !important;
+    transform: none !important;
+  }
+
+  [data-cluster-edge] {
+    stroke-dashoffset: 0 !important;
+  }
+
+  .about-cong-table-wide__img {
+    max-width: 100% !important;
+    max-height: 140mm !important;
+    object-fit: contain !important;
+  }
+
+  .cluster-card {
+    break-inside: avoid !important;
+    page-break-inside: avoid !important;
+    border-radius: 2mm !important;
+  }
+
+  .cluster-card__title {
+    font-size: 0.96rem !important;
+    line-height: 1.1 !important;
+    padding: 0.58rem 0.72rem 0.54rem !important;
+  }
+
+  .cluster-card__cluster-item {
+    font-size: 0.64rem !important;
+    line-height: 1.08 !important;
+    padding: 0.26rem 0.32rem !important;
+  }
+
+  .cluster-card__cluster-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+    gap: 0.12rem !important;
+  }
+
+  .cluster-card__vars-grid {
+    grid-template-columns: repeat(5, minmax(0, 1fr)) !important;
+    max-height: none !important;
+    overflow: visible !important;
+    gap: 0.13rem !important;
+  }
+
+  .cluster-card__vars-grid--observed {
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+  }
+
+  .cluster-card__var-item {
+    font-size: 0.5rem !important;
+    line-height: 1.08 !important;
+    padding: 0.2rem 0.24rem !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+  }
+
+  .cluster-card__var-item--incident {
+    font-size: 0.47rem !important;
+    line-height: 1.06 !important;
+  }
+
+  .cluster-card__section {
+    padding: 0.36rem 0.4rem !important;
+  }
+
+  .cluster-card__section-title {
+    font-size: 0.58rem !important;
+    margin: 0 0 0.28rem !important;
+    letter-spacing: 0.06em !important;
+  }
+
+  .about-cong-table-wide__frame {
+    padding: 0.62rem 0.72rem !important;
+  }
+
+  .about-synth-figure,
+  .about-cong-table-wide {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+
+  /* Acerca hoja 1: compactar para que el componente no salte completo a otra hoja */
+  #acerca .about-narrative--justify p {
+    font-size: 0.74rem !important;
+    line-height: 1.42 !important;
+    margin-bottom: 0.42rem !important;
+  }
+
+  #acerca .about-cong-title {
+    margin: 0.75rem 0 0.48rem !important;
+    font-size: 1rem !important;
+  }
+
+  #acerca .vars-table-scroll {
+    margin-top: 0.35rem !important;
+  }
+
+  /* Hoja 2 de Acerca: compactar para que tabla + figura convivan en la misma A4. */
+  #acerca-conglomerado .doc-page__inner--about-conglomerado {
+    padding-top: 7mm !important;
+    padding-bottom: 7mm !important;
+  }
+
+  #acerca-conglomerado .about-vars-table-title {
+    margin: 0.45rem 0 0.3rem !important;
+  }
+
+  #acerca-conglomerado .about-cong-table-wide {
+    margin: 0 0 0.3rem !important;
+  }
+
+  #acerca-conglomerado .about-cong-table-wide__frame {
+    padding: 0.2rem 0.28rem !important;
+  }
+
+  #acerca-conglomerado .cluster-card__title {
+    font-size: 0.8rem !important;
+    line-height: 1.05 !important;
+    padding: 0.32rem 0.46rem !important;
+  }
+
+  #acerca-conglomerado .cluster-card__section {
+    padding: 0.18rem 0.22rem !important;
+  }
+
+  #acerca-conglomerado .cluster-card__section-title {
+    margin: 0 0 0.14rem !important;
+    font-size: 0.52rem !important;
+  }
+
+  #acerca-conglomerado .about-synth-figure {
+    margin-top: 0.28rem !important;
+  }
+
+  #acerca-conglomerado .about-synth-figure__lead {
+    padding: 0.34rem 0.5rem !important;
+    font-size: 0.6rem !important;
+    line-height: 1.15 !important;
+  }
+
+  #acerca-conglomerado .about-synth-figure__frame {
+    max-height: 66mm !important;
+    padding: 0.34rem 0.46rem !important;
+  }
+
+  #acerca-conglomerado .about-synth-diagram__img {
+    max-height: 62mm !important;
+  }
+
+  #acerca-conglomerado .about-synth-figure__cap {
+    padding: 0.28rem 0.44rem !important;
+    font-size: 0.56rem !important;
+    line-height: 1.18 !important;
+  }
+
+  #acerca .about-cong-table-wide {
+    margin: 0 !important;
+    break-inside: auto !important;
+    page-break-inside: auto !important;
+  }
+
+  #acerca .about-cong-table-wide__frame {
+    padding: 0.35rem 0.42rem !important;
+    break-inside: auto !important;
+    page-break-inside: auto !important;
+  }
+
+  .vars-cluster-table {
+    font-size: 7.6pt !important;
+    line-height: 1.35 !important;
+  }
+
+  .vars-cluster-table thead th {
+    padding: 2.2mm 2.4mm !important;
+  }
+
+  .vars-cluster-table tbody th,
+  .vars-cluster-table tbody td {
+    padding: 2.1mm 2.4mm !important;
+  }
+
+  .vars-cluster-table thead {
+    display: table-header-group;
+  }
+
+  .vars-cluster-table tbody tr {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+
+
+  .filter-bar {
+    flex-wrap: wrap !important;
+  }
+
+  .stats-table {
+    font-size: 7pt !important;
+    border-collapse: collapse !important;
+  }
+
+  .stats-table thead {
+    display: table-header-group;
+  }
+
+  .stats-table tbody tr {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+
+  .stats-table thead th {
+    background: #e2e8f0 !important;
+    color: #0f172a !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  .table-scroll {
+    overflow: visible !important;
+  }
+
+  .doc-page--footer.site-footer {
+    page-break-inside: avoid;
+    break-inside: avoid;
+    width: 210mm !important; /* Force true A4 layout */
+    height: 297mm !important;
+    max-width: none !important;
+  }
+
+  .back-cover__contact {
+    background: #f8fafc !important;
+    border: 1px solid #e2e8f0 !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  .closing-cta__btn-label {
+    background: #153a5c !important;
+    color: #fff !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  .closing-cta__intro {
+    background: #f8fafc !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  .site-footer__grid {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+
+  .footer-logo-slot {
+    /* Keep screen styles */
+  }
+
+  .footer-logo-slot img {
+    max-width: 100% !important;
+  }
+
+  a {
+    color: #153a5c !important;
+    text-decoration: none !important;
+  }
+
+  .btn--primary {
+    border: 1px solid #153a5c !important;
+    box-shadow: none !important;
+    background: #fff !important;
+    color: #153a5c !important;
+  }
+
+  .doc-page--toc {
+    /* Keep original premium styles */
+  }
+
+  /* Contenido (TOC): evitar hoja extra solo para el logo */
+  .doc-page--toc .doc-page__inner {
+    padding-top: 7mm !important;
+    padding-bottom: 6mm !important;
+  }
+
+  .doc-page--toc .toc-zigzag {
+    padding-top: 4.8rem !important;
+    gap: 1rem !important;
+  }
+
+  .doc-page--toc .toc-doc-line {
+    margin: 0.6rem 0 0 !important;
+    padding-top: 0.55rem !important;
+    break-inside: avoid !important;
+    page-break-inside: avoid !important;
+  }
+
+  .doc-page--toc .toc-doc-line__logo {
+    height: 2.5rem !important;
+    width: auto !important;
+    max-height: none !important;
+  }
+
+  .section-cover__upper--lime,
+  .section-cover__upper--amber,
+  .section-cover__upper--orange,
+  .section-cover__upper--navy,
+  .section-cover__panel--lime,
+  .section-cover__panel--amber,
+  .section-cover__panel--orange,
+  .section-cover__panel--navy,
+  .section-cover__shell--c {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  /* En PDF dejar aire debajo de la imagen de portada (layout C). */
+  .section-cover__shell--c {
+    box-sizing: border-box !important;
+    padding-bottom: 25.4mm !important; /* ~1 pulgada */
+  }
+
+  .doc-page--section-cover {
+    page-break-inside: auto;
+    break-inside: auto;
+  }
+
+  .section-cover__figure {
+    break-inside: avoid;
+    page-break-inside: avoid;
+    flex: 1 1 auto !important;
+    display: flex !important;
+    align-items: stretch !important;
+  }
+  
+  .section-cover__img {
+    display: block !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    height: 100% !important;
+    min-height: 8rem !important;
+    object-fit: cover !important;
+    object-fit: cover !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  .doc-page--cover .cover-hero__logo,
+  .doc-page--cover .cover-hero__logo-efacticom {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  .toc-zigzag__item,
+  .section-cover__jump {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+
+  .toc-zigzag__panel--lime,
+  .toc-zigzag__panel--amber,
+  .toc-zigzag__panel--orange,
+  .toc-zigzag__panel--navy {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+  
+  /* Hipervínculos del TOC: visibles y clicables en PDF */
+  .toc-block__row-link {
+    color: var(--blue-800, #1e40af) !important;
+    text-decoration: none !important;
+    font-size: 1rem !important;
+    font-weight: 600 !important;
+  }
+  
+  .toc-zigzag__panel-title-link {
+    color: inherit !important;
+    text-decoration: none !important;
+  }
+  
+  /* Hipervínculos de la barra de navegación rápida: también clicables en PDF */
+  .doc-page__nav a,
+  .doc-page__nav-link,
+  .doc-page__nav-home {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  /* Barra de navegación por hoja: visible en PDF con enlaces # a secciones */
+  .doc-page__nav {
+    display: flex !important;
+    flex-direction: row !important;
+    flex-wrap: wrap !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    gap: 0.25rem 0.35rem !important;
+    min-height: 0 !important;
+    padding: 0.4rem 0.65rem 0.5rem !important;
+    margin: 0 !important;
+    background: linear-gradient(90deg, #1f4f80 0%, #173f67 100%) !important;
+    border-bottom: 1px solid #153a5c !important;
+    break-inside: avoid !important;
+    page-break-inside: avoid !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  .doc-page__nav-inner {
+    justify-content: center !important;
+    flex-wrap: wrap !important;
+    gap: 0.3rem 0.25rem !important;
+    max-width: 100% !important;
+    flex: 1 1 auto !important;
+  }
+
+  .doc-page__nav::after {
+    content: counter(docpage, decimal-leading-zero);
+    flex: 0 0 auto;
+    margin-left: 0.5rem;
+    font-size: 0.75rem;
+    font-weight: 800;
+    letter-spacing: 0.12em;
+    line-height: 1;
+    color: #153a5c !important;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .doc-page__nav-home {
+    background: rgba(255, 255, 255, 0.16) !important;
+    color: #eef5ff !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  .doc-page__nav-home--current {
+    background: #ffffff !important;
+    color: #153a5c !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  .doc-page__nav-link {
+    color: rgba(235, 245, 255, 0.86) !important;
+    text-decoration: none !important;
+  }
+
+  .doc-page__nav-link--current,
+  .doc-page__nav-link[aria-current="page"] {
+    color: #153a5c !important;
+    background: #ffffff !important;
+    border-radius: 6px !important;
+    padding: 0.14rem 0.4rem !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  .doc-page__nav-sep {
+    color: rgba(255, 255, 255, 0.36) !important;
+  }
+
+  /* Grillas que en pantalla usan min/max-width; el viewport de impresión suele ser «estrecho» → 1 columna */
+  .dt-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+  
+  .report-dash__merged-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    break-inside: auto !important;
+    page-break-inside: auto !important;
+    gap: 0.15rem !important;
+  }
+  
+  /* Excepción: el layout combinado debe ser estrictamente 1 columna internamente para caber */
+  .report-dash__merged-grid .dt-grid {
+    grid-template-columns: 1fr !important;
+    gap: 0.15rem !important;
+  }
+  
+  .report-dash__merged-grid .dt-svg {
+    max-height: 90px !important;
+  }
+  
+  .report-dash__merged-grid .dt-chart {
+    padding: 0.15rem 0.25rem !important;
+  }
+  
+  .report-dash__merged-grid .dt-title {
+    font-size: 0.55rem !important;
+    margin: 0 0 0.1rem !important;
+  }
+  
+  .report-dash__merged-grid .dt-sub {
+    font-size: 0.5rem !important;
+    margin: 0 0 0.1rem !important;
+  }
+
+  .dashboard-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+
+  .dash-row {
+    grid-template-columns: minmax(160px, 220px) minmax(0, 1fr) !important;
+  }
+
+  .report-dash__body--split {
+    grid-template-columns: minmax(180px, 240px) minmax(0, 1fr) !important;
+  }
+
+  /* Línea de tiempo: forzar layout ancho (≥700px) aunque el media de impresión sea estrecho */
+  .timeline-wrap {
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+  }
+
+  .timeline-track {
+    --timeline-pad-left: 2rem;
+    --timeline-line-left: 0.55rem;
+    --timeline-line-w: 2px;
+    --timeline-dot-size: 12px;
+    padding-left: var(--timeline-pad-left) !important;
+    border-left: none !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+  }
+
+  .timeline-line {
+    position: absolute !important;
+    left: var(--timeline-line-left) !important;
+    top: 0 !important;
+    bottom: 0 !important;
+    width: var(--timeline-line-w) !important;
+    height: 100% !important;
+    color: #60a5d8 !important;
+    display: block !important;
+  }
+
+  .timeline-card {
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+  }
+
+  .timeline-card::before {
+    left: calc(
+      var(--timeline-line-left) + (var(--timeline-line-w) / 2) -
+        (var(--timeline-dot-size) / 2) - var(--timeline-pad-left)
+    ) !important;
+    top: 1.5rem !important;
+  }
+
+  /* Contexto: una hoja; bloques compactos sin cortes bruscos */
+  
+  /* Bloqueo extremo: anular el "scroll tracker" de JS para impresión */
+  .doc-page__nav-link--current:not([data-local-current="true"]),
+  .doc-page__nav-link[aria-current="page"]:not([data-local-current="true"]) {
+    background: transparent !important;
+    border-color: transparent !important;
+    color: rgba(235, 245, 255, 0.86) !important;
+    box-shadow: none !important;
+  }
+  
+  .doc-page__nav-home--current:not([data-local-current="true"]) {
+    color: var(--blue-900) !important;
+    background: transparent !important;
+  }
+  
+  /* Forzar la pestaña correcta estática para cada hoja */
+  .doc-page__nav-link[data-local-current="true"] {
+    background: rgba(255, 255, 255, 0.95) !important;
+    color: var(--blue-800) !important; 
+    border-color: rgba(0, 0, 0, 0.1) !important;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.1) !important;
+  }
+  
+  .doc-page__nav-home[data-local-current="true"] {
+    background: rgba(255, 255, 255, 0.95) !important;
+    color: var(--blue-800) !important; 
+    border-radius: 50%;
+  }
+
+  #contexto.doc-page--context {
+    display: flex !important;
+    flex-direction: column !important;
+    min-height: 0 !important;
+  }
+
+  #contexto .doc-page__inner--context {
+    flex: 1 1 auto !important;
+    display: flex !important;
+    flex-direction: column !important;
+    padding: 10mm 12mm 11mm !important;
+  }
+
+  #contexto .context-insight,
+  #contexto .context-mini-tl-wrap,
+  #contexto .context-ecosystem {
+    break-inside: avoid !important;
+    page-break-inside: avoid !important;
+  }
+
+  #contexto .context-mini-tl__label {
+    font-size: 6.4pt !important;
+    line-height: 1.22 !important;
+  }
+
+  #contexto .context-mini-tl__year {
+    font-size: 8.2pt !important;
+  }
+
+  #contexto .context-ecosystem__label {
+    font-size: 13pt !important;
+  }
+
+  #contexto .context-ecosystem__subtitle {
+    font-size: 9pt !important;
+    color: #334155 !important;
+    font-weight: 600 !important;
+  }
+
+  #contexto .context-insight__name {
+    font-size: 11pt !important;
+  }
+
+  #contexto .context-insight__detail {
+    font-size: 8pt !important;
+  }
+
+  #contexto .context-insight__kicker {
+    font-size: 5.5pt !important;
+  }
+
+  #contexto .context-stack {
+    gap: 1rem !important;
+  }
+
+  #contexto .context-ecosystem-wrap {
+    padding-top: 1rem !important;
+  }
+
+  #contexto .context-ecosystem {
+    min-height: 0 !important;
+    padding: 1.55rem 1rem !important;
+  }
+
+  #contexto .context-mini-tl-wrap {
+    padding-top: 0.85rem !important;
+  }
+
+  /* Línea de tiempo: cinco etapas en una hoja; compactar sin partir tarjetas */
+  #contexto-etapas-1 .timeline-wrap {
+    margin-top: 0.85rem !important;
+  }
+
+  #contexto-etapas-1 .timeline-track {
+    gap: 0.55rem !important;
+  }
+
+  #contexto-etapas-1 .timeline-card {
+    padding: 0.75rem 0.9rem !important;
+    box-shadow: none !important;
+  }
+
+  #contexto-etapas-1 .timeline-card__head {
+    margin-bottom: 0.4rem !important;
+    gap: 0.35rem 0.75rem !important;
+  }
+
+  #contexto-etapas-1 .timeline-card__title {
+    font-size: 1.02rem !important;
+  }
+
+  #contexto-etapas-1 .timeline-card__phase {
+    font-size: 0.68rem !important;
+  }
+
+  #contexto-etapas-1 .timeline-card__range {
+    font-size: 0.88rem !important;
+  }
+
+  #contexto-etapas-1 .timeline-card ul {
+    font-size: 0.78rem !important;
+    line-height: 1.38 !important;
+  }
+
+  #contexto-etapas-1 .timeline-card ul li {
+    margin-bottom: 0.18rem !important;
+  }
+
+  #contexto-etapas-1 .timeline-card::before {
+    top: 0.55rem !important;
+  }
+
+  /* Portadillas compactas mantienen altura A4 fija (no aplicar max-height: none) */
+  .doc-page.doc-page--compact:not(.doc-page--section-cover),
+  .doc-page.doc-page--dash-scroll {
+    max-height: none !important;
+    overflow: visible !important;
+  }
+
+  .doc-page.doc-page--compact > .doc-page__inner,
+  .doc-page.doc-page--section-cover.doc-page--compact > .section-cover,
+  .doc-page.doc-page--dash-scroll > .doc-page__inner--scroll {
+    overflow: visible !important;
+    max-height: none !important;
+  }
+
+  /* Override final: Acerca debe replicar el flujo del HTML en PDF. */
+  #acerca .about-narrative--justify p {
+    font-size: 0.79rem !important;
+    line-height: 1.5 !important;
+    margin-bottom: 0.58rem !important;
+  }
+
+  #acerca .about-cong-title {
+    margin: 1rem 0 0.62rem !important;
+    font-size: clamp(1.35rem, 3.5vw, 1.75rem) !important;
+    line-height: 1.2 !important;
+  }
+
+  #acerca .about-chapter-title {
+    font-size: clamp(1.35rem, 3.5vw, 1.75rem) !important;
+    line-height: 1.2 !important;
+  }
+
+  #acerca .vars-cluster-table {
+    font-size: 8.3pt !important;
+    line-height: 1.42 !important;
+  }
+
+  #acerca .vars-cluster-table thead th {
+    padding: 2.8mm 2.8mm !important;
+  }
+
+  #acerca .vars-cluster-table tbody th,
+  #acerca .vars-cluster-table tbody td {
+    padding: 2.7mm 2.8mm !important;
+  }
+
+  #acerca-conglomerado .about-cong-table-wide__frame {
+    padding: 0.14rem 0.2rem !important;
+  }
+
+  #acerca-conglomerado .cluster-card__title {
+    font-size: 0.74rem !important;
+    padding: 0.25rem 0.35rem !important;
+  }
+
+  #acerca-conglomerado .cluster-card__section {
+    padding: 0.14rem 0.16rem !important;
+  }
+
+  #acerca-conglomerado .cluster-card__section-title {
+    font-size: 0.48rem !important;
+    margin-bottom: 0.1rem !important;
+  }
+
+  #acerca-conglomerado .cluster-card__var-item {
+    font-size: 0.42rem !important;
+    line-height: 1.02 !important;
+    padding: 0.14rem 0.16rem !important;
+  }
+
+  #acerca-conglomerado .cluster-card__var-item--incident {
+    font-size: 0.4rem !important;
+  }
+
+  #acerca-conglomerado .about-synth-figure__frame {
+    max-height: 72mm !important;
+  }
+
+  #acerca-conglomerado .about-synth-diagram__img {
+    max-height: 68mm !important;
+  }
+
+  #acerca-conglomerado .about-cong-table-wide,
+  #acerca-conglomerado .about-synth-figure {
+    break-inside: auto !important;
+    page-break-inside: auto !important;
+  }
+
+  /* 6.1 en PDF: replicar layout HTML y evitar degradación visual/saltos. */
+  #dash-a.doc-page--results-sheet {
+    height: 297mm !important;
+    min-height: 297mm !important;
+    max-height: 297mm !important;
+    overflow: hidden !important;
+  }
+
+  #dash-a .doc-page__inner--report-dash {
+    padding: 7mm 10mm 8mm !important;
+    overflow: hidden !important;
+  }
+
+  #dash-a .report-dash__title {
+    margin: 0 0 0.85rem !important;
+    font-size: clamp(1.35rem, 3.5vw, 1.75rem) !important;
+    line-height: 1.2 !important;
+  }
+
+  #dash-a .report-dash__subtitle--excel {
+    margin: 0 0 0.12rem !important;
+    font-size: 1.02rem !important;
+    color: var(--blue-900) !important;
+  }
+
+  #dash-a .dashboard-excel {
+    padding: 0.42rem 0.5rem 0.5rem !important;
+    border: 1px solid rgba(37, 99, 171, 0.22) !important;
+    border-radius: 8px !important;
+    background: #fff !important;
+    overflow: hidden !important;
+  }
+
+  #dash-a .dashboard-excel__table thead th {
+    font-size: 0.58rem !important;
+    padding: 0.17rem 0.12rem !important;
+    text-align: center !important;
+    vertical-align: middle !important;
+  }
+
+  #dash-a .dashboard-excel__table tbody td {
+    font-size: 1.7rem !important;
+    padding: 0.25rem 0.18rem 0.3rem !important;
+    text-align: center !important;
+    vertical-align: middle !important;
+  }
+
+  #dash-a .dashboard-excel__charts {
+    display: flex !important;
+    flex-direction: column !important;
+    margin-top: 0.34rem !important;
+    align-items: stretch !important;
+    gap: 0.44rem !important;
+  }
+
+  #dash-a .dashboard-excel__slicers--top {
+    display: grid !important;
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+    gap: 0.18rem !important;
+  }
+
+  #dash-a .dashboard-excel__left {
+    min-width: 0 !important;
+  }
+
+  #dash-a .dashboard-excel__right {
+    min-width: 0 !important;
+    margin-top: 0.28rem !important;
+    padding-top: 0.22rem !important;
+    border-top: 1px solid #d5e3f1 !important;
+  }
+
+  #dash-a .dashboard-excel__mini-title {
+    display: flex !important;
+    align-items: baseline !important;
+    gap: 0.42rem !important;
+    margin: 0 0 0.2rem !important;
+    font-size: 0.66rem !important;
+  }
+
+  #dash-a .dashboard-excel__max {
+    margin-left: 0 !important;
+    padding-left: 0.42rem !important;
+    border-left: 1px solid #cbd5e1 !important;
+    font-size: 0.58rem !important;
+    color: #334155 !important;
+    font-weight: 700 !important;
+  }
+
+  #dash-a .dashboard-excel__slicer {
+    padding: 0.2rem 0.24rem !important;
+    border: 1px solid #cfe1f3 !important;
+    background: #f8fbff !important;
+    border-radius: 0 !important;
+  }
+
+  #dash-a .dashboard-excel__slicer span {
+    font-size: 0.5rem !important;
+  }
+
+  #dash-a .dashboard-excel__slicer strong {
+    font-size: 0.55rem !important;
+    display: block !important;
+    line-height: 1.2 !important;
+    white-space: normal !important;
+    overflow-wrap: anywhere !important;
+  }
+
+  #dash-a .dashboard-excel__left .integrated-monthly__svg {
+    min-height: 260px !important;
+  }
+
+  #dash-a .excel-bars {
+    height: 8.9rem !important;
+    padding: 0.2rem 0.16rem 0.12rem !important;
+    overflow: visible !important;
+    border: 1px solid #d9e7f4 !important;
+    background: #fff !important;
+  }
+
+  #dash-a .excel-bars-svg {
+    width: 100% !important;
+    height: 100% !important;
+    overflow: hidden !important;
+  }
+
+  #dash-a .excel-bars-svg__bar-total {
+    fill: #c8ddf1 !important;
+  }
+
+  #dash-a .excel-bars-svg__bar-part {
+    fill: #3f7bbc !important;
+    stroke: #1f4e85 !important;
+  }
+
+  #dash-a .excel-bars-svg__xtick {
+    font-size: 8px !important;
+  }
+
+  #dash-a .excel-bars-svg__val {
+    font-size: 8px !important;
+  }
+
+  #dash-a .excel-bars-svg__val--max {
+    font-size: 8.5px !important;
+  }
+
+  #dash-a .report-dash__note--excel {
+    margin-top: 0.34rem !important;
+    font-size: 0.85rem !important;
+    line-height: 1.5 !important;
+  }
+
+  /* 6.2 en PDF: conservar layout HTML y evitar salto a hoja siguiente. */
+  #dash-b.doc-page--results-sheet {
+    height: 297mm !important;
+    min-height: 297mm !important;
+    max-height: 297mm !important;
+    overflow: hidden !important;
+  }
+
+  #dash-b .doc-page__inner--report-dash {
+    padding: 7mm 10mm 8mm !important;
+    overflow: hidden !important;
+  }
+
+  #dash-b .report-dash__title {
+    margin: 0 0 0.35rem !important;
+    font-size: clamp(1.35rem, 3.5vw, 1.75rem) !important;
+    line-height: 1.2 !important;
+  }
+
+  #dash-b .report-dash__merged-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 0.72rem !important;
+    margin: 0.48rem 0 0.44rem !important;
+    align-items: stretch !important;
+  }
+
+  #dash-b .report-dash__split-section--framed {
+    padding: 0.3rem 0.34rem !important;
+    border-width: 1px !important;
+  }
+
+  #dash-b .report-dash__subtitle {
+    text-align: center !important;
+    margin: 0 0 0.24rem !important;
+    font-size: 0.68rem !important;
+  }
+
+  #dash-b .dt-grid {
+    gap: 0.4rem !important;
+  }
+
+  #dash-b .dt-chart {
+    min-height: 142px !important;
+    height: 142px !important;
+    padding: 0.26rem 0.32rem !important;
+  }
+
+  #dash-b .dt-chart__title {
+    text-align: center !important;
+    font-size: 0.62rem !important;
+    margin: 0 0 0.16rem !important;
+  }
+
+  #dash-b .dt-chart__sub {
+    font-size: 0.46rem !important;
+    margin: -0.08rem 0 0.12rem !important;
+  }
+
+  #dash-b .dt-chart__frame {
+    padding: 0.08rem 0.06rem 0.02rem !important;
+  }
+
+  #dash-b .dt-svg {
+    max-height: 92px !important;
+  }
+
+  #dash-b .report-dash__analysis {
+    margin-top: 0.34rem !important;
+    padding-top: 0.3rem !important;
+  }
+
+  #dash-b .report-dash__analysis-p {
+    font-size: 0.66rem !important;
+    line-height: 1.4 !important;
+    margin: 0 0 0.24rem !important;
+  }
+}

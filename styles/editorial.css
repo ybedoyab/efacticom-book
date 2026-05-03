@@ -1,0 +1,709 @@
+/**
+ * EFACTICOM — Tabla de contenidos y portadas por tema (paleta azul editorial; sin verde/amarillo de referencias externas).
+ */
+
+:root {
+  --edi-mint: var(--blue-100);
+  --edi-navy: var(--blue-900);
+  --edi-outline: rgba(100, 116, 139, 0.42);
+  --edi-font: var(--font-sans);
+  --toc-accent-lime: #2563ab;
+  --toc-accent-amber: #64748b;
+  --toc-accent-orange: #153a5c;
+  --toc-accent-navy: #0f2744;
+}
+
+/* ——— Tabla de contenidos (estilo informe anual) ——— */
+.doc-page--toc {
+  background: var(--white);
+  border-bottom: 1px solid rgba(15, 39, 68, 0.08);
+  min-height: var(--page-a4-h);
+}
+
+.doc-page--toc .doc-page__inner {
+  position: relative;
+  padding-top: 3.5rem;
+  padding-bottom: 2.25rem;
+  font-family: var(--font-sans);
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.doc-page--toc [data-toc-body] {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.toc-main-block {
+  flex: 0 0 auto;
+}
+
+/* Índice en zigzag: panel de color (misma familia que la portada de cada tema) + lista */
+.toc-zigzag {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  padding-top: 10.2rem;
+}
+
+.toc-zigzag__item {
+  width: 100%;
+  display: flex;
+}
+
+.toc-zigzag__item--left {
+  justify-content: flex-start;
+}
+
+.toc-zigzag__item--right {
+  justify-content: flex-end;
+}
+
+.toc-zigzag__card {
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+  width: min(92%, 40rem);
+  min-height: 6.25rem;
+  gap: 1rem;
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  overflow: visible;
+}
+
+.toc-zigzag__panel {
+  flex: 0 0 40%;
+  min-width: 7.25rem;
+  max-width: 13rem;
+  padding: 1.22rem 1.08rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0.5rem;
+  border-radius: 4px;
+  box-shadow: 0 1px 4px rgba(15, 39, 68, 0.1);
+  border: 1px solid rgba(15, 39, 68, 0.07);
+}
+
+.toc-zigzag__panel-num {
+  font-size: 1.02rem;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+}
+
+.toc-zigzag__panel-heading {
+  margin: 0;
+  font-size: clamp(0.92rem, 2.05vw, 1.08rem);
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  line-height: 1.32;
+  text-transform: uppercase;
+}
+
+.toc-zigzag__panel-title-link {
+  text-decoration: none;
+  color: inherit;
+}
+
+.toc-zigzag__panel-title-link:hover {
+  opacity: 0.92;
+}
+
+.toc-zigzag__panel--lime {
+  background: linear-gradient(165deg, #dce8f7 0%, #c8dbf2 52%, #b4cde9 100%);
+  color: #163454;
+}
+
+.toc-zigzag__panel--lime .toc-zigzag__panel-num {
+  color: rgba(22, 52, 84, 0.7);
+}
+
+.toc-zigzag__panel--amber {
+  background: linear-gradient(165deg, #9cb7d5 0%, #85a6ca 46%, #6f95bc 100%);
+  color: #163454;
+}
+
+.toc-zigzag__panel--amber .toc-zigzag__panel-num {
+  color: rgba(22, 52, 84, 0.66);
+}
+
+.toc-zigzag__panel--orange {
+  background: linear-gradient(165deg, #456d99 0%, #325d8b 100%);
+  color: #fff;
+}
+
+.toc-zigzag__panel--orange .toc-zigzag__panel-num {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.toc-zigzag__panel--navy {
+  background: linear-gradient(165deg, #1e3f66 0%, #122b4b 92%);
+  color: #fff;
+}
+
+.toc-zigzag__panel--navy .toc-zigzag__panel-num {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.toc-zigzag__body {
+  flex: 1 1 auto;
+  position: relative;
+  background: #fafbfd;
+  padding: 1rem 1.1rem;
+  min-width: 0;
+  border-radius: 4px;
+  box-shadow: 0 1px 4px rgba(15, 39, 68, 0.08);
+  border: 1px solid rgba(15, 39, 68, 0.06);
+}
+
+.toc-zigzag__bg-num {
+  position: absolute;
+  right: 0.2rem;
+  bottom: 0;
+  font-size: clamp(3.35rem, 12vw, 4.65rem);
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -0.04em;
+  color: #2b4e77;
+  opacity: 0.16;
+  pointer-events: none;
+  user-select: none;
+}
+
+.toc-zigzag__list {
+  position: relative;
+  z-index: 1;
+}
+
+.toc-intro--edi {
+  font-size: 0.92rem;
+  color: var(--slate-600);
+  max-width: 38rem;
+  margin: 0 0 1.5rem;
+  line-height: 1.55;
+}
+
+.toc-watermark {
+  position: absolute;
+  top: 1.35rem;
+  left: 50%;
+  transform: translateX(-50%);
+  margin: 0;
+  font-size: clamp(3.35rem, 7.2vw, 4.4rem);
+  font-weight: 800;
+  letter-spacing: 0.2em;
+  line-height: 1;
+  color: var(--slate-400);
+  pointer-events: none;
+  user-select: none;
+  z-index: 0;
+  opacity: 0.62;
+}
+
+[data-toc-body] {
+  position: relative;
+  z-index: 1;
+}
+
+/* Portada / índice — una línea discreta */
+.toc-frontmatter {
+  list-style: none;
+  margin: 0 0 2rem;
+  padding: 0 0 1rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem 1.75rem;
+  border-bottom: 1px solid rgba(15, 39, 68, 0.1);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--slate-500);
+}
+
+.toc-frontmatter__link {
+  text-decoration: none;
+  color: inherit;
+}
+
+.toc-frontmatter__link:hover {
+  color: var(--blue-700);
+}
+
+.toc-frontmatter__p {
+  font-weight: 800;
+  color: var(--blue-800);
+  margin-right: 0.25rem;
+}
+
+/* Listas del índice (compartidas con layout zigzag) */
+
+.toc-block__list--minimal {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  position: relative;
+  z-index: 1;
+}
+
+.toc-block__list--minimal li {
+  margin: 0 0 0.28rem;
+}
+
+.toc-block__row-link {
+  display: flex;
+  gap: 0.65rem;
+  align-items: baseline;
+  text-decoration: none;
+  color: inherit;
+  padding: 0.2rem 0;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.toc-block__row-link:hover .toc-block__text {
+  color: var(--blue-700);
+}
+
+.toc-block__text {
+  flex: 1;
+  color: #3b4f67;
+  line-height: 1.45;
+}
+
+.toc-block__text em {
+  font-style: italic;
+}
+
+.toc-doc-line {
+  flex-shrink: 0;
+  margin: 1.75rem 0 0;
+  padding-top: 1.1rem;
+  border-top: 1px solid rgba(15, 39, 68, 0.12);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.8rem;
+  text-align: center;
+  color: #193250;
+}
+
+.toc-doc-line__logo {
+  display: block;
+  width: auto;
+  height: 2.5rem;
+}
+
+/* En exportación a PDF, usar unidad física para evitar reducción visual. */
+@media print {
+  .toc-doc-line__logo {
+    height: 11mm;
+  }
+}
+
+.toc-doc-line__text {
+  font-size: 0.8rem;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+/* ——— Portadas de sección (divisorios editoriales, no UI) ——— */
+.doc-page--section-cover {
+  padding: 0;
+  overflow: hidden;
+}
+
+.doc-page.doc-page--section-cover.doc-page--compact {
+  min-height: var(--page-a4-h);
+  height: var(--page-a4-h);
+  max-height: var(--page-a4-h);
+  display: flex;
+  flex-direction: column;
+}
+
+.doc-page.doc-page--section-cover.doc-page--compact > .section-cover {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.section-cover {
+  font-family: var(--edi-font);
+  height: 100%;
+  min-height: 100%;
+  position: relative;
+  background: #fafbfd;
+}
+
+.section-cover__shell {
+  position: relative;
+  min-height: 100%;
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* Número gigante de fondo */
+.section-cover__mega {
+  position: absolute;
+  right: -1rem;
+  top: 42%;
+  margin: 0;
+  font-size: clamp(10rem, 28vw, 16rem);
+  font-weight: 800;
+  line-height: 0.75;
+  letter-spacing: -0.06em;
+  color: var(--blue-900);
+  opacity: 0.06;
+  pointer-events: none;
+  z-index: 0;
+  user-select: none;
+}
+
+.section-cover__serial {
+  display: block;
+  font-size: 0.7rem;
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: 0.22em;
+  color: rgba(255, 255, 255, 0.82);
+  margin-bottom: 0.65rem;
+}
+
+.section-cover__shell--a .section-cover__serial {
+  font-size: clamp(4.6rem, 10.5vw, 6.8rem);
+  letter-spacing: 0.02em;
+  color: rgba(255, 255, 255, 0.9);
+  margin-bottom: 0.5rem;
+}
+
+.section-cover__heading {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: clamp(1.65rem, 4.2vw, 2.35rem);
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  line-height: 1.12;
+  text-transform: uppercase;
+  color: #fff;
+}
+
+.section-cover__deck {
+  margin: 0;
+  max-width: 38rem;
+  font-size: 0.95rem;
+  line-height: 1.58;
+  color: var(--slate-600);
+}
+
+/* Layout A — franja superior de color ~40 % + blanco */
+.section-cover__shell--a .section-cover__upper {
+  position: relative;
+  z-index: 1;
+  flex: 0 0 34%;
+  min-height: 98mm;
+  display: flex;
+  align-items: flex-end;
+  padding: 2rem 14mm 1.6rem;
+}
+
+.section-cover__upper--lime {
+  background: linear-gradient(145deg, #2563ab 0%, #1e4976 55%, #153a5c 100%);
+}
+
+.section-cover__upper--amber {
+  background: linear-gradient(145deg, #94a3b8 0%, #cbd5e1 42%, #e2e8f0 100%);
+}
+
+.section-cover__upper--amber .section-cover__serial {
+  color: rgba(15, 39, 68, 0.55);
+}
+
+.section-cover__upper--amber .section-cover__heading {
+  color: var(--blue-950);
+  text-shadow: none;
+}
+
+.section-cover__upper--orange {
+  background: linear-gradient(145deg, #153a5c 0%, #0f2744 100%);
+}
+
+.section-cover__upper--navy {
+  background: linear-gradient(145deg, #0f2744 0%, #0a1628 88%);
+}
+
+.section-cover__upper-inner {
+  position: relative;
+  z-index: 2;
+  max-width: 36rem;
+}
+
+.section-cover__shell--a .section-cover__lower {
+  position: relative;
+  z-index: 2;
+  flex: 1 1 auto;
+  padding: 2rem 14mm 2.5rem;
+  background: #fafbfd;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  min-height: 0;
+}
+
+/* Acceso rápido (misma fuente que el índice: página + etiqueta) */
+.section-cover__jump {
+  margin: 0;
+  padding: 0;
+}
+
+.section-cover__jump-label {
+  display: block;
+  font-size: 0.62rem;
+  font-weight: 800;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--slate-400);
+  margin-bottom: 0.55rem;
+}
+
+.section-cover__jump-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.section-cover__jump-link {
+  display: flex;
+  gap: 0.65rem;
+  align-items: baseline;
+  text-decoration: none;
+  color: var(--slate-700);
+  font-size: 0.8rem;
+  font-weight: 500;
+  padding: 0.2rem 0;
+  border-bottom: 1px solid transparent;
+  transition: color 0.15s ease, border-color 0.15s ease;
+}
+
+.section-cover__jump-link:hover {
+  color: var(--blue-700);
+  border-bottom-color: rgba(37, 99, 171, 0.35);
+}
+
+.section-cover__jump-p {
+  min-width: 1.35rem;
+  font-weight: 700;
+  font-size: 0.72rem;
+  color: var(--slate-500);
+  font-variant-numeric: tabular-nums;
+}
+
+.section-cover__jump-txt {
+  flex: 1;
+  line-height: 1.35;
+}
+
+.section-cover__figure {
+  margin: 0.25rem 0 0;
+  padding: 0;
+  border-radius: 3px;
+  overflow: hidden;
+  flex: 1 1 auto;
+  min-height: 9rem;
+  max-height: 14rem;
+  background: var(--slate-200);
+}
+
+.section-cover__shell--a .section-cover__figure {
+  margin-top: 0.35rem;
+}
+
+.section-cover__img {
+  width: 100%;
+  height: 100%;
+  min-height: 9rem;
+  max-height: 14rem;
+  object-fit: cover;
+  display: block;
+}
+
+/* Layout B — panel izquierdo + contenido */
+.section-cover__shell--b {
+  display: grid;
+  grid-template-columns: minmax(26%, 92px) 1fr;
+  min-height: 100%;
+  background: #fafbfd;
+}
+
+.section-cover__shell--b .section-cover__mega {
+  left: 0.5rem;
+  right: auto;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: clamp(8rem, 22vw, 13rem);
+  opacity: 0.07;
+}
+
+.section-cover__panel {
+  min-height: 100%;
+}
+
+.section-cover__panel--lime {
+  background: linear-gradient(180deg, #2563ab 0%, #1e4976 100%);
+}
+
+.section-cover__panel--amber {
+  background: linear-gradient(180deg, #cbd5e1 0%, #e2e8f0 100%);
+}
+
+.section-cover__panel--orange {
+  background: linear-gradient(180deg, #153a5c 0%, #0f2744 100%);
+}
+
+.section-cover__panel--navy {
+  background: linear-gradient(180deg, #0f2744 0%, #0a1628 100%);
+}
+
+.section-cover__split-main {
+  position: relative;
+  z-index: 2;
+  padding: 2.75rem 14mm 2.5rem 2rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  gap: 1rem;
+  min-height: 0;
+  overflow: auto;
+}
+
+.section-cover__shell--b .section-cover__figure {
+  flex: 1 1 auto;
+  min-height: 8rem;
+  max-height: 12rem;
+  margin-top: 0.25rem;
+}
+
+.section-cover__shell--b .section-cover__img {
+  min-height: 8rem;
+  max-height: 12rem;
+}
+
+.section-cover__shell--b .section-cover__serial {
+  display: none;
+}
+
+.section-cover__shell--b .section-cover__heading {
+  color: var(--blue-950);
+}
+
+.section-cover__shell--b.section-cover__shell--lime .section-cover__serial {
+  color: var(--blue-500);
+}
+
+.section-cover__shell--b.section-cover__shell--orange .section-cover__serial,
+.section-cover__shell--b.section-cover__shell--navy .section-cover__serial {
+  color: var(--slate-500);
+}
+
+/* Layout C — fondo con gradiente suave, centrado, imagen que ocupa el espacio restante */
+.section-cover__shell--c {
+  height: 100%;
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+  background: linear-gradient(165deg, #e8f0fb 0%, #f8fafc 45%, #ffffff 100%);
+  justify-content: flex-start;
+}
+
+.section-cover__shell--c .section-cover__mega {
+  left: 50%;
+  right: auto;
+  transform: translateX(-42%);
+  top: 18%;
+  opacity: 0.055;
+}
+
+.section-cover__centered {
+  position: relative;
+  z-index: 2;
+  padding: 3.5rem 14mm 2rem;
+  max-width: 44rem;
+  width: 100%;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 1.35rem;
+  flex: 0 0 auto;
+}
+
+.section-cover__shell--c .section-cover__figure {
+  flex: 1 1 auto;          /* fills all remaining A4 space */
+  width: calc(100% - 28mm);
+  max-width: 44rem;
+  margin: 0 auto 1.5rem;   /* small bottom margin */
+  min-height: 14rem;
+  max-height: none;
+  border-radius: 6px;      /* rounded on all sides */
+  overflow: hidden;
+}
+
+.section-cover__shell--c .section-cover__img {
+  width: 100%;
+  height: 100%;
+  min-height: 14rem;
+  max-height: none;
+  object-fit: cover;
+}
+
+/* Serial "03" de fondo ya es suficiente — ocultar el badge en layout C */
+.section-cover__shell--c .section-cover__serial {
+  display: none;
+}
+
+.section-cover__shell--c .section-cover__heading {
+  color: var(--blue-950);
+  font-size: clamp(1.5rem, 3.8vw, 2.15rem);
+}
+
+@media (max-width: 520px) {
+  .toc-zigzag__card {
+    flex-direction: column;
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .toc-zigzag__item--right .toc-zigzag__card {
+    flex-direction: column-reverse;
+  }
+
+  .toc-zigzag__panel {
+    flex: 0 0 auto;
+    max-width: none;
+    min-width: 0;
+    width: 100%;
+  }
+
+  .section-cover__shell--b {
+    grid-template-columns: 1fr;
+  }
+
+  .section-cover__panel {
+    min-height: 88px;
+  }
+
+  .section-cover__shell--b .section-cover__mega {
+    display: none;
+  }
+}
