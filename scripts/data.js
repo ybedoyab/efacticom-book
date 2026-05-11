@@ -780,6 +780,11 @@
         copyright: "© 2026 Gisela Patricia Monsalve Fonnegra. Todos los derechos reservados.",
         emails: ["info@productivity-team.com", "giselam73@gmail.com"],
         linkedin: "www.linkedin.com/in/gisela-patricia-monsalve-fonnegra-2b325a25",
+        designer: {
+          name: "Yulian Bedoya",
+          role: "Diseño editorial y digital",
+          linkedin: "https://www.linkedin.com/in/ybedoyab/",
+        },
       },
     },
   };

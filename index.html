@@ -4,6 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="description" content="" />
+    <!-- Uso interno: abrir sin parámetros. Publicación web (lectura, restricciones suaves): ?edicion=web -->
     <title>EFACTICOM — Cartilla digital</title>
     <link rel="icon" href="assets/icons/favicon.svg" type="image/svg+xml" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -21,6 +22,7 @@
     <link rel="stylesheet" href="styles/results-editorial.css" />
     <link rel="stylesheet" href="styles/closing-editorial.css" />
     <link rel="stylesheet" href="styles/print.css" />
+    <link rel="stylesheet" href="styles/web-public.css" />
   </head>
   <body class="efacticom doc-mode">
     <a class="skip-link" href="#main">Ir al contenido</a>
@@ -38,6 +40,22 @@
           <span class="doc-toolbar__page-num" data-doc-page-num aria-live="polite">01</span>
         </div>
         <div class="doc-toolbar__actions">
+          <span class="doc-toolbar__web-badge" data-web-edicion-badge hidden>Vista web · solo lectura</span>
+          <button
+            type="button"
+            class="doc-toolbar__reading-mode"
+            data-reading-mode-toggle
+            aria-pressed="false"
+            aria-label="Activar modo lectura: desactiva copiar y seleccionar texto"
+          >
+            <svg class="doc-toolbar__reading-mode-icon" width="18" height="18" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+              <path
+                fill="currentColor"
+                d="M18 2H6a2 2 0 0 0-2 2v16c0 1.1.9 2 2 2h12a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2zM6 4h5v8l-2.5-1.5L6 12V4z"
+              />
+            </svg>
+            <span data-reading-mode-label>Modo lectura</span>
+          </button>
           <button
             type="button"
             class="doc-toolbar__pdf"
@@ -81,6 +99,7 @@
                   <h1 class="cover__headline" data-hero-headline></h1>
                   <p class="cover__subline cover-hero__subline" data-hero-subline></p>
                   <p class="cover-hero__year" data-cover-year>2026</p>
+                  <p class="cover-hero__design-credit" data-hero-design-credit></p>
                 </div>
               </div>
             </div>
@@ -305,6 +324,7 @@
           <div class="back-cover__contact" data-back-contact style="max-width: 44rem; margin: 0 auto;"></div>
           <div class="back-cover__meta" style="justify-content: center; max-width: 44rem; margin: 1rem auto 0; text-align: center;">
             <span class="back-cover__meta-left" data-back-copyright style="max-width: none; text-align: center; color: var(--slate-600); font-weight: normal; font-size: 0.62rem;"></span>
+            <p class="back-cover__design-credit" data-back-designer></p>
           </div>
         </div>
       </footer>

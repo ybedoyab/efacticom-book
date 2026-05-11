@@ -31,12 +31,85 @@
     return rel;
   }
 
+  /** URL absoluta (p. ej. enlaces LinkedIn en datos). */
+  function absoluteHttpUrl(url) {
+    var s = String(url || "").trim();
+    if (!s) return "";
+    if (/^https?:\/\//i.test(s)) return s;
+    return "https://" + s.replace(/^\/+/, "");
+  }
+
   function qs(root, sel) {
     return (root || document).querySelector(sel);
   }
 
   function qsa(root, sel) {
     return Array.prototype.slice.call((root || document).querySelectorAll(sel));
+  }
+
+  var readingModeEventsBound = false;
+
+  function readingModePreventDefault(e) {
+    e.preventDefault();
+  }
+
+  /**
+   * Barreras suaves en pantalla (no afecta exportar PDF desde el botón).
+   * @param {boolean} on
+   */
+  function setReadingModeEnabled(on) {
+    var root = document.documentElement;
+    var body = document.body;
+    if (on) {
+      root.classList.add("efacticom--reading-mode");
+      body.classList.add("efacticom--reading-mode");
+      if (!readingModeEventsBound) {
+        document.addEventListener("contextmenu", readingModePreventDefault, true);
+        document.addEventListener("copy", readingModePreventDefault, true);
+        document.addEventListener("cut", readingModePreventDefault, true);
+        document.addEventListener("dragstart", readingModePreventDefault, true);
+        readingModeEventsBound = true;
+      }
+    } else {
+      root.classList.remove("efacticom--reading-mode");
+      body.classList.remove("efacticom--reading-mode");
+      if (readingModeEventsBound) {
+        document.removeEventListener("contextmenu", readingModePreventDefault, true);
+        document.removeEventListener("copy", readingModePreventDefault, true);
+        document.removeEventListener("cut", readingModePreventDefault, true);
+        document.removeEventListener("dragstart", readingModePreventDefault, true);
+        readingModeEventsBound = false;
+      }
+    }
+    syncReadingModeToggleUI();
+  }
+
+  function syncReadingModeToggleUI() {
+    var btn = qs(document, "[data-reading-mode-toggle]");
+    if (!btn || btn.style.display === "none") return;
+    var on = document.documentElement.classList.contains("efacticom--reading-mode");
+    btn.setAttribute("aria-pressed", on ? "true" : "false");
+    var lab = qs(btn, "[data-reading-mode-label]");
+    if (lab) {
+      lab.textContent = on ? "Modo selección" : "Modo lectura";
+    }
+    btn.setAttribute(
+      "aria-label",
+      on
+        ? "Modo lectura activo. Activar para permitir copiar y seleccionar texto."
+        : "Modo selección. Activar para desactivar copia y selección de texto."
+    );
+  }
+
+  function bindReadingModeToggle() {
+    if (isWebPublicEdition()) return;
+    var btn = qs(document, "[data-reading-mode-toggle]");
+    if (!btn) return;
+    btn.addEventListener("click", function () {
+      var nowOn = document.documentElement.classList.contains("efacticom--reading-mode");
+      setReadingModeEnabled(!nowOn);
+    });
+    syncReadingModeToggleUI();
   }
 
   /**
@@ -996,17 +1069,6 @@
       var yVal = 90 - gy * 10;
       var y = pt + (ih * gy) / 9;
       out.push(
-        '<line class="excel-bars-svg__grid" x1="' +
-          pl +
-          '" y1="' +
-          y +
-          '" x2="' +
-          (w - pr) +
-          '" y2="' +
-          y +
-          '" style="stroke:#e5e7eb;stroke-width:1"/>'
-      );
-      out.push(
         '<text class="excel-bars-svg__ytick" x="' +
           (pl - 4) +
           '" y="' +
@@ -1796,17 +1858,6 @@
     for (var g = 0; g <= tickSteps; g++) {
       var tv = (maxY * (tickSteps - g)) / tickSteps;
       var gy = pt + (ih * g) / tickSteps;
-      o.push(
-        '<line class="integrated-monthly__grid" x1="' +
-          pl +
-          '" y1="' +
-          gy +
-          '" x2="' +
-          (w - pr) +
-          '" y2="' +
-          gy +
-          '"/>'
-      );
       var tlab = tv % 1 === 0 ? String(Math.round(tv)) : tv.toFixed(1);
       o.push(
         '<text class="integrated-monthly__ytick" text-anchor="end" dominant-baseline="middle" x="' +
@@ -2261,6 +2312,27 @@
     var yr = qs(hero, "[data-cover-year]");
     if (yr && d.meta && d.meta.year) {
       yr.textContent = d.meta.year;
+    }
+    var designCred = qs(hero, "[data-hero-design-credit]");
+    if (designCred) {
+      var dgHero = d.closing && d.closing.backCover && d.closing.backCover.designer;
+      if (dgHero && dgHero.name) {
+        var hHref = absoluteHttpUrl(dgHero.linkedin);
+        var roleH = escapeHtml(dgHero.role || "Diseño editorial y digital");
+        var nameH = escapeHtml(dgHero.name);
+        designCred.innerHTML =
+          roleH +
+          ": " +
+          (hHref
+            ? '<a href="' +
+              escapeHtml(hHref) +
+              '" target="_blank" rel="noopener noreferrer">' +
+              nameH +
+              "</a>"
+            : nameH);
+      } else {
+        designCred.innerHTML = "";
+      }
     }
   }
 
@@ -3273,6 +3345,27 @@
       }
       var cr = qs(document, "[data-back-copyright]");
       if (cr) cr.textContent = bc.copyright || "";
+      var dsg = qs(document, "[data-back-designer]");
+      if (dsg) {
+        var dg = bc.designer;
+        if (dg && dg.name) {
+          var dHref = absoluteHttpUrl(dg.linkedin);
+          var roleLine = escapeHtml(dg.role || "Diseño editorial y digital");
+          var nameLine = escapeHtml(dg.name);
+          dsg.innerHTML =
+            roleLine +
+            ": " +
+            (dHref
+              ? '<a class="back-cover__mail" href="' +
+                escapeHtml(dHref) +
+                '" target="_blank" rel="noopener noreferrer">' +
+                nameLine +
+                "</a>"
+              : nameLine);
+        } else {
+          dsg.innerHTML = "";
+        }
+      }
     }
   }
 
@@ -3361,7 +3454,32 @@
     update();
   }
 
+  function isWebPublicEdition() {
+    try {
+      return new URLSearchParams(window.location.search || "").get("edicion") === "web";
+    } catch (e) {
+      return false;
+    }
+  }
+
+  /**
+   * Vista publicación web (?edicion=web): oculta PDF e interruptor de modo; fuerza modo lectura.
+   */
+  function applyWebPublicEdition() {
+    if (!isWebPublicEdition()) return;
+    document.documentElement.classList.add("efacticom--web-edicion");
+    document.body.classList.add("efacticom--web-edicion");
+    var pdfBtn = qs(document, "[data-action-print]");
+    if (pdfBtn) pdfBtn.style.display = "none";
+    var modeBtn = qs(document, "[data-reading-mode-toggle]");
+    if (modeBtn) modeBtn.style.display = "none";
+    var badge = qs(document, "[data-web-edicion-badge]");
+    if (badge) badge.removeAttribute("hidden");
+    setReadingModeEnabled(true);
+  }
+
   function init() {
+    applyWebPublicEdition();
     setMeta();
     fillNav();
     fillPageNav();
@@ -3375,6 +3493,7 @@
     fillResults();
     fillClosing();
     bindPdfButtons();
+    bindReadingModeToggle();
   }
 
   window.EFACTICOM_UI = {

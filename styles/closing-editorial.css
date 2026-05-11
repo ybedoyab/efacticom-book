@@ -242,6 +242,24 @@
   color: var(--blue-900);
 }
 
+.back-cover__design-credit {
+  margin: 0.5rem 0 0;
+  padding: 0;
+  max-width: none;
+  font-size: 0.62rem;
+  line-height: 1.45;
+  color: var(--slate-600);
+  font-weight: 500;
+}
+
+.back-cover__design-credit:empty {
+  display: none;
+}
+
+.back-cover__design-credit .back-cover__mail {
+  font-weight: 600;
+}
+
 .back-cover__meta-right {
   color: var(--slate-600);
   font-size: 0.62rem;

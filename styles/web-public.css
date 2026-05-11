@@ -1,0 +1,38 @@
+/**
+ * Modo lectura (clase efacticom--reading-mode): barreras suaves frente a copia/selección en pantalla.
+ * No altera la exportación a PDF. ?edicion=web fuerza este modo y oculta PDF + interruptor.
+ */
+@media screen {
+  html.efacticom--reading-mode .doc-main,
+  html.efacticom--reading-mode .doc-toolbar,
+  html.efacticom--reading-mode .site-footer {
+    -webkit-user-select: none;
+    user-select: none;
+  }
+
+  html.efacticom--reading-mode .skip-link {
+    -webkit-user-select: text;
+    user-select: text;
+  }
+
+  html.efacticom--reading-mode .doc-main img,
+  html.efacticom--reading-mode .doc-main svg,
+  html.efacticom--reading-mode .site-footer img {
+    -webkit-user-drag: none;
+    user-select: none;
+    pointer-events: none;
+  }
+
+  html.efacticom--reading-mode .doc-main a,
+  html.efacticom--reading-mode .doc-main button,
+  html.efacticom--reading-mode .doc-toolbar a,
+  html.efacticom--reading-mode .doc-toolbar button,
+  html.efacticom--reading-mode .site-footer a {
+    pointer-events: auto;
+  }
+
+  html.efacticom--reading-mode .doc-main ::selection,
+  html.efacticom--reading-mode .site-footer ::selection {
+    background: transparent;
+  }
+}

@@ -115,27 +115,31 @@ a:hover {
   left: 1rem;
 }
 
-/* ——— Barra superior tipo visor PDF ——— */
+/* ——— Barra superior tipo visor PDF (ancho viewport; las hojas siguen en A4) ——— */
 .doc-toolbar {
   position: sticky;
   top: 0;
   z-index: 100;
+  width: 100%;
   background: var(--toolbar-bg);
   border-bottom: 1px solid var(--toolbar-border);
   box-shadow: 0 1px 0 rgba(255, 255, 255, 0.6) inset;
 }
 
 .doc-toolbar__inner {
-  width: var(--page-max-w);
-  min-width: var(--page-max-w);
+  width: 100%;
   max-width: none;
+  min-width: 0;
   margin: 0 auto;
-  padding: 0.4rem 0.6rem;
+  padding: 0.4rem clamp(0.5rem, 2vw, 1.5rem);
   display: flex;
   align-items: center;
   gap: 0.35rem 0.65rem;
   flex-wrap: nowrap;
   justify-content: space-between;
+  overflow-x: auto;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
 }
 
 .doc-toolbar__left {
@@ -174,8 +178,9 @@ a:hover {
   flex-direction: row;
   align-items: center;
   justify-content: center;
-  flex-wrap: wrap;
-  gap: 0.35rem 0.55rem;
+  flex-wrap: nowrap;
+  gap: 0.35rem 0.5rem;
+  min-width: 0;
 }
 
 .doc-toolbar__nav {
@@ -189,7 +194,7 @@ a:hover {
   margin: 0;
   padding: 0;
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   gap: 0.15rem 0.35rem;
   justify-content: center;
   align-items: center;
@@ -222,6 +227,79 @@ a:hover {
 
 .doc-toolbar__actions {
   flex-shrink: 0;
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.45rem;
+}
+
+.doc-toolbar__web-badge {
+  font-size: 0.65rem;
+  font-weight: 600;
+  color: var(--blue-800);
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+  padding: 0.28rem 0.55rem;
+  border-radius: 6px;
+  background: rgba(37, 99, 171, 0.08);
+  border: 1px solid rgba(37, 99, 171, 0.18);
+}
+
+/* Alternar modo lectura (sin copiar) / modo selección (normal) */
+.doc-toolbar__reading-mode {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+  padding: 0.4rem 0.85rem;
+  font-family: inherit;
+  font-size: 0.74rem;
+  font-weight: 600;
+  line-height: 1.2;
+  color: var(--blue-800);
+  background: var(--white);
+  border: 1px solid rgba(37, 99, 171, 0.35);
+  border-radius: 999px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease,
+    background 0.2s ease,
+    color 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.doc-toolbar__reading-mode:hover {
+  transform: translateY(-1px);
+  border-color: rgba(37, 99, 171, 0.55);
+  background: rgba(37, 99, 171, 0.06);
+}
+
+.doc-toolbar__reading-mode:active {
+  transform: translateY(0);
+}
+
+.doc-toolbar__reading-mode:focus-visible {
+  outline: 2px solid var(--blue-400);
+  outline-offset: 3px;
+}
+
+.doc-toolbar__reading-mode[aria-pressed="true"] {
+  color: var(--white);
+  background: linear-gradient(135deg, var(--blue-700), var(--blue-800));
+  border-color: transparent;
+  box-shadow: 0 3px 12px rgba(30, 64, 120, 0.35);
+}
+
+.doc-toolbar__reading-mode[aria-pressed="true"]:hover {
+  background: linear-gradient(135deg, var(--blue-600), var(--blue-700));
+}
+
+.doc-toolbar__reading-mode-icon {
+  flex-shrink: 0;
+  opacity: 0.92;
 }
 
 /* Botón «Guardar PDF» — mismo estilo pill que .btn--primary en la landing */
@@ -712,6 +790,31 @@ a:hover {
   color: rgba(255, 255, 255, 0.72);
   user-select: none;
   text-shadow: 0 1px 12px rgba(10, 22, 40, 0.5);
+}
+
+.cover-hero__design-credit {
+  margin: 0.5rem 0 0;
+  font-family: var(--font-sans);
+  font-size: 0.62rem;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  line-height: 1.35;
+  color: rgba(255, 255, 255, 0.62);
+  text-shadow: 0 1px 10px rgba(10, 22, 40, 0.45);
+}
+
+.cover-hero__design-credit:empty {
+  display: none;
+}
+
+.cover-hero__design-credit a {
+  color: rgba(255, 255, 255, 0.78);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.cover-hero__design-credit a:hover {
+  color: #fff;
 }
 
 /* Mosaico reutilizable fuera del hero (si se usa en otro sitio) */
